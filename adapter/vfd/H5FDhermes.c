@@ -44,6 +44,10 @@
 /* Necessary hermes headers */
 #include "hermes_wrapper.h"
 
+/* candice added functions for I/O traces start */
+#include <time.h>       // for struct timespec, clock_gettime(CLOCK_MONOTONIC, &end);
+/* candice added functions for I/O traces end */
+
 #define H5FD_HERMES (H5FD_hermes_init())
 
 /* HDF5 doesn't currently have a driver init callback. Use
@@ -111,6 +115,8 @@ typedef struct H5FD_hermes_t {
   unsigned char *page_buf;
   bitv_t         blob_in_bucket;
   unsigned       flags;       /* The flags passed from H5Fcreate/H5Fopen */
+
+  // char    filename[H5L_MAX_LINK_NAME_LEN];     /* candice added for print */
 } H5FD_hermes_t;
 
 /* Driver-specific file access properties */
@@ -118,6 +124,35 @@ typedef struct H5FD_hermes_fapl_t {
   hbool_t persistence; /* write to file name on flush */
   size_t  page_size;   /* page size */
 } H5FD_hermes_fapl_t;
+
+
+/* candice added struct start */
+typedef struct Dset_access_t {
+  char      dset_name[H5L_MAX_LINK_NAME_LEN];
+  haddr_t   dset_offset;
+  int       dset_ndim;
+  hssize_t    dset_npoints;
+  hsize_t   *dset_dim;
+} Dset_access_t;
+
+typedef struct File_access_t {
+  char      filename[H5L_MAX_LINK_NAME_LEN];
+  char      type[10]; /* open, read, write, close */
+  size_t    file_size;
+  size_t    access_size; /* data access size */
+  size_t    page_start;
+  size_t    page_end;
+  size_t    page_num;
+  haddr_t   addr_start;
+  haddr_t   addr_end;
+  char      *mem_type;
+  size_t    ndsets;
+  Dset_access_t * dsets;
+
+} File_access_t;
+
+/* candice added struct end */
+
 
 /*
  * These macros check for overflow of various quantities.  These macros
@@ -158,6 +193,10 @@ static herr_t  H5FD__hermes_read(H5FD_t *_file, H5FD_mem_t type, hid_t fapl_id,
 static herr_t  H5FD__hermes_write(H5FD_t *_file, H5FD_mem_t type, hid_t fapl_id,
                                   haddr_t addr, size_t size, const void *buf);
 
+/* candice added prototypes start */
+
+/* candice added prototypes end */
+
 static const H5FD_class_t H5FD_hermes_g = {
   H5FD_HERMES_VALUE,         /* value                */
   H5FD_HERMES_NAME,          /* name                 */
@@ -168,7 +207,7 @@ static const H5FD_class_t H5FD_hermes_g = {
   NULL,                      /* sb_encode            */
   NULL,                      /* sb_decode            */
   sizeof(H5FD_hermes_fapl_t),/* fapl_size            */
-  NULL,                      /* fapl_get             */
+  NULL,     /* fapl_get             */
   NULL,                      /* fapl_copy            */
   H5FD__hermes_fapl_free,    /* fapl_free            */
   0,                         /* dxpl_size            */
@@ -184,7 +223,7 @@ static const H5FD_class_t H5FD_hermes_g = {
   H5FD__hermes_get_eoa,      /* get_eoa              */
   H5FD__hermes_set_eoa,      /* set_eoa              */
   H5FD__hermes_get_eof,      /* get_eof              */
-  NULL,                      /* get_handle           */
+  NULL,   /* get_handle           */
   H5FD__hermes_read,         /* read                 */
   H5FD__hermes_write,        /* write                */
   NULL,                      /* flush                */
@@ -280,6 +319,478 @@ herr_t H5FD__hermes_read_gap(H5FD_hermes_t *file, size_t seek_offset,
 
 done:
   H5FD_HERMES_FUNC_LEAVE;
+}
+
+
+/* candice added, print H5FD_mem_t H5FD_MEM_OHDR type more info */
+void print_ohdr_type(H5F_mem_t type){
+
+  if (type == H5FD_MEM_FHEAP_HDR){
+    printf("- Access_Region_Mem_Type : H5FD_MEM_FHEAP_HDR \n");
+
+  } else if( type == H5FD_MEM_FHEAP_IBLOCK ){
+    printf("- Access_Region_Mem_Type : H5FD_MEM_FHEAP_IBLOCK \n");
+
+  } else if( type == H5FD_MEM_FSPACE_HDR ){
+    printf("- Access_Region_Mem_Type : H5FD_MEM_FSPACE_HDR \n");
+
+  } else if( type == H5FD_MEM_SOHM_TABLE  ){
+    printf("- Access_Region_Mem_Type : H5FD_MEM_SOHM_TABLE  \n");
+
+  } else if( type == H5FD_MEM_EARRAY_HDR ){
+    printf("- Access_Region_Mem_Type : H5FD_MEM_EARRAY_HDR \n");
+
+  } else if( type == H5FD_MEM_EARRAY_IBLOCK ){
+    printf("- Access_Region_Mem_Type : H5FD_MEM_EARRAY_IBLOCK \n");
+
+  } else if( type == H5FD_MEM_FARRAY_HDR  ){
+    printf("- Access_Region_Mem_Type : H5FD_MEM_FARRAY_HDR  \n");
+
+  } else {
+    printf("- Access_Region_Mem_Type : H5FD_MEM_OHDR \n");
+  }
+}
+
+void print_mem_type(H5F_mem_t type){
+  if (type == H5FD_MEM_DEFAULT){
+    printf("- Access_Region_Mem_Type : H5FD_MEM_DEFAULT \n");
+
+  } else if( type == H5FD_MEM_SUPER ){
+    printf("- Access_Region_Mem_Type : H5FD_MEM_SUPER \n");
+
+  } else if( type == H5FD_MEM_BTREE ){
+    printf("- Access_Region_Mem_Type : H5FD_MEM_BTREE \n");
+
+  } else if( type == H5FD_MEM_DRAW ){
+    printf("- Access_Region_Mem_Type : H5FD_MEM_DRAW \n");
+
+  } else if( type == H5FD_MEM_GHEAP ){
+    printf("- Access_Region_Mem_Type : H5FD_MEM_GHEAP \n");
+
+  } else if( type == H5FD_MEM_LHEAP ){
+    printf("- Access_Region_Mem_Type : H5FD_MEM_LHEAP \n");
+
+  } else if( type == H5FD_MEM_OHDR ){
+    print_ohdr_type(type);
+
+  } else if( type == H5FD_MEM_NTYPES ){
+    printf("- Access_Region_Mem_Type : H5FD_MEM_NTYPES \n");
+
+  } else if( type == H5FD_MEM_NOLIST ){
+    printf("- Access_Region_Mem_Type : H5FD_MEM_NOLIST \n");
+
+  } else {
+    printf("- Access_Region_Mem_Type : NOT_VALID \n");
+  }
+}
+
+/* candice added, print H5FD_mem_t H5FD_MEM_OHDR type more info */
+void record_ohdr_type(H5F_mem_t type, File_access_t * access){
+
+  if (type == H5FD_MEM_FHEAP_HDR){
+    strcpy(access->mem_type, "H5FD_MEM_FHEAP_HDR");
+
+  } else if( type == H5FD_MEM_FHEAP_IBLOCK ){
+    strcpy(access->mem_type, "H5FD_MEM_FHEAP_IBLOCK");
+
+  } else if( type == H5FD_MEM_FSPACE_HDR ){
+    strcpy(access->mem_type, "H5FD_MEM_FSPACE_HDR");
+
+  } else if( type == H5FD_MEM_SOHM_TABLE  ){
+    strcpy(access->mem_type, "H5FD_MEM_SOHM_TABLE");
+
+  } else if( type == H5FD_MEM_EARRAY_HDR ){
+    strcpy(access->mem_type, "H5FD_MEM_EARRAY_HDR");
+
+  } else if( type == H5FD_MEM_EARRAY_IBLOCK ){
+    strcpy(access->mem_type, "H5FD_MEM_EARRAY_IBLOCK");
+
+  } else if( type == H5FD_MEM_FARRAY_HDR  ){
+    strcpy(access->mem_type, "H5FD_MEM_FARRAY_HDR");
+
+  } else {
+    strcpy(access->mem_type, "H5FD_MEM_OHDR");
+  }
+}
+
+
+/* candice added, print H5FD_mem_t memory allocated type */
+void record_mem_type(H5F_mem_t type, File_access_t * access){
+  // https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html
+
+  access->mem_type = malloc(30*sizeof(char));
+
+  if (type == H5FD_MEM_DEFAULT){
+    strcpy(access->mem_type, "H5FD_MEM_SUPER");
+
+  } else if( type == H5FD_MEM_SUPER ){
+    strcpy(access->mem_type, "H5FD_MEM_SUPER");
+
+  } else if( type == H5FD_MEM_BTREE ){
+    strcpy(access->mem_type, "H5FD_MEM_BTREE");
+
+  } else if( type == H5FD_MEM_DRAW ){
+    strcpy(access->mem_type, "H5FD_MEM_DRAW");
+
+  } else if( type == H5FD_MEM_GHEAP ){
+    strcpy(access->mem_type, "H5FD_MEM_GHEAP");
+
+  } else if( type == H5FD_MEM_LHEAP ){
+    strcpy(access->mem_type, "H5FD_MEM_LHEAP");
+
+  } else if( type == H5FD_MEM_OHDR ){
+    record_ohdr_type(type, access);
+
+  } else if( type == H5FD_MEM_NTYPES ){
+    strcpy(access->mem_type, "H5FD_MEM_NTYPES");
+
+  } else if( type == H5FD_MEM_NOLIST ){
+    strcpy(access->mem_type, "H5FD_MEM_NOLIST");
+
+  } else {
+    strcpy(access->mem_type, "NOT_VALID");
+  }
+}
+
+
+void init_file_access_struct(File_access_t * acc){
+
+  acc->file_size = -1;
+  acc->access_size = -1;
+  acc->page_start = -1;
+  acc->page_end = -1;
+  acc->page_num = -1;
+  acc->addr_start = -1;
+  acc->addr_end = -1;
+  acc->ndsets = -1;
+
+}
+
+
+void * print_data_access_record(File_access_t * acc){
+
+  printf("Access_Type : %s\n", acc->type);
+  printf("Filename : %s\n", acc->filename);
+  printf("Filesize : %s\n", acc->file_size);
+  printf("- Access_Size : %ld\n", acc->access_size);
+  printf("- Access_Region_Mem_Type : %s\n", acc->mem_type);
+  printf("- Start_Page : %ld\n", acc->page_start);
+  printf("- End_Page : %ld\n", acc->page_end);
+  printf("- Number_Pages : %ld\n", acc->page_num);
+  printf("- Start_Address : %ld\n", acc->addr_start);
+  printf("- End_Address : %ld\n", acc->addr_end);
+  printf("- Num_Datasets : %ld\n", acc->ndsets);
+
+
+  if( acc->ndsets != -1 ){
+    
+
+    for(int i=0; i< acc->ndsets; i++){
+      printf("-- Dataset_Name : %s\n", acc->dsets[i].dset_name);
+      printf("-- Dataset_Offset : %ld\n", acc->dsets[i].dset_offset);
+      printf("-- Dataset_N_Points : %d\n", acc->dsets[i].dset_npoints);
+      printf("-- Dataset_N_Dimension : %d\n", acc->dsets[i].dset_ndim);
+      
+      hsize_t dset_ndim = acc->dsets[i].dset_ndim;
+
+      printf("-- Dataset_Dimension : {");
+      for (int j=0; j < dset_ndim; j++){
+        printf("%ld,", (int) acc->dsets[i].dset_dim[j]);
+      }
+      printf("}\n");
+    }
+
+  }
+
+  printf("\n");
+
+}
+
+/* candice added, for printout dataset dimension info */
+void * print_dim_info(hid_t space_id){
+
+  // H5Sget_simple_extent_dims
+  int d = H5Sget_simple_extent_ndims(space_id);
+  printf("-- Dataset_N_Dimension : %ld\n", d);
+  int np = H5Sget_simple_extent_npoints(space_id);
+  printf("-- Dataset_N_Points : %ld\n", np);
+  hsize_t 	dims[d];
+  hsize_t 	maxdims[d];
+  H5Sget_simple_extent_dims(space_id,dims,maxdims);
+  printf("-- Dataset_Dimension : {");
+  for (int i=0; i < d; i++){
+    printf("%d,",dims[i]);
+  }
+  // printf("} maxdims {");
+  // for (int i=0; i < d; i++){
+  //   printf("%d,",maxdims[i]);
+  // }
+  printf("}\n");
+  
+}
+
+/* candice added, for printout dataset info */
+void print_dset_info(hid_t dset_id){
+
+  char dset_name[50];
+
+  if((H5Iget_name(dset_id,dset_name, 100*sizeof(char))) < 0){
+    printf("-- Dataset_Name : Error\n");
+  } else {
+    printf("-- Dataset_Name : %s\n", dset_name); 
+  }
+
+  // H5Dget_offset
+  // if(H5Dget_offset(dset_id) == HADDR_UNDEF){
+  //   printf("-- Dataset_Offset : Error (HADDR_UNDEF)\n");
+  // }else {
+  //   printf("-- Dataset_Offset : %zu\n", H5Dget_offset(dset_id));
+  // }
+
+  printf("-- Dataset_Offset : %ld\n", H5Dget_offset(dset_id));
+
+  hid_t space_id = H5Dget_space(dset_id);
+  print_dim_info(space_id);
+
+  // // H5Dget_num_chunks : error, Segmentation fault      (core dumped)
+  // hsize_t   nchunks;
+  // H5Dget_num_chunks(dset_id, H5S_ALL, &nchunks);
+  // printf("H5Dget_num_chunks : %zu\n", nchunks);
+
+  // H5Dget_chunk_info_by_coord
+  // unsigned * 	filter_mask;
+  // haddr_t * 	addr;
+  // hsize_t * 	size;
+  // haddr_t   offset = H5Dget_offset(dset_id);
+  // H5Dget_chunk_info_by_coord(dset_id, &offset, filter_mask, addr,size);
+  // printf("H5Dget_chunk_info_by_coord : filter_mask=%ld addr=%zu size=%zu\n", 
+  //   filter_mask, addr, size);
+
+
+  // H5Dget_access_plist
+  // H5Dget_create_plist
+  // hsize_t vlen_size;
+  // H5Dvlen_get_buf_size(dset_id, H5Dget_type(dset_id), H5Dget_space(dset_id),&vlen_size);
+  // printf("-- H5Dvlen_get_buf_size : %ld\n", vlen_size);
+
+  // printf("\n");
+
+}
+
+void * print_all_dset(){
+  size_t dset_count = H5Fget_obj_count(H5F_OBJ_ALL,H5F_OBJ_DATASET);
+
+  hid_t dset_id_list[dset_count];
+  hid_t dset_id;
+
+  if( dset_count == 0){
+    printf("- Num_Datasets : 0\n");
+  } else {
+    if((H5Fget_obj_ids(H5F_OBJ_ALL, H5F_OBJ_DATASET, dset_count, dset_id_list)) < 0){
+      printf("- Num_Datasets : Error\n");
+    } else {
+      printf("- Num_Datasets : %ld\n",dset_count);
+      for (int i=0; i< dset_count; i++){
+        print_dset_info(dset_id_list[i]);
+      }
+    }
+  }
+
+
+  printf("\n");
+}
+
+/* candice added, record dataset info */
+void record_all_dset(File_access_t * access){
+
+  // H5F_OBJ_ALL   
+  // (H5F_OBJ_FILE | H5F_OBJ_DATASET | H5F_OBJ_GROUP | H5F_OBJ_DATATYPE | H5F_OBJ_ATTR)
+
+  
+  size_t dset_count = H5Fget_obj_count(H5F_OBJ_ALL,H5F_OBJ_DATASET);
+  access->ndsets = dset_count;
+
+
+  hid_t dset_id_list[dset_count];
+  hid_t dset_id;
+
+  if((H5Fget_obj_ids(H5F_OBJ_ALL, H5F_OBJ_DATASET, dset_count, dset_id_list)) < 0){
+    printf("- H5Fget_obj_ids : Error\n");
+  } else {
+    for (int i=0; i< dset_count; i++){
+
+      if(i ==0){
+        access->dsets = malloc(sizeof(Dset_access_t ));
+      } else {
+        access->dsets = realloc(access->dsets, sizeof(Dset_access_t));
+      }
+      
+
+      dset_id = dset_id_list[i];
+      hid_t space_id = H5Dget_space(dset_id);
+
+      // get dataset name
+      H5Iget_name(dset_id,access->dsets[i].dset_name, sizeof(access->dsets[i].dset_name));
+
+      // get offset
+      access->dsets[i].dset_offset = H5Dget_offset(dset_id);
+
+      // get dimension
+      int d = H5Sget_simple_extent_ndims(space_id);
+
+      hsize_t 	dims[d];
+      hsize_t 	maxdims[d];
+      H5Sget_simple_extent_dims(space_id,dims,maxdims);
+
+      //  H5Sget_simple_extent_npoints
+      access->dsets[i].dset_npoints = H5Sget_simple_extent_npoints(space_id);
+      access->dsets[i].dset_ndim = d;
+      access->dsets[i].dset_dim = (hsize_t *) malloc( d * sizeof(dims));
+      access->dsets[i].dset_dim = dims;
+
+      //print_dset_info(dset_id_list[i]);
+
+      // // H5Dget_num_chunks : gives error, stack overflow
+      // hsize_t   nchunks;
+      // H5Dget_num_chunks(dset_id, H5S_ALL, &nchunks);
+      // printf("H5Dget_num_chunks : %zu\n", nchunks);
+
+
+      // // H5Dget_chunk_info_by_coord
+      // unsigned * 	filter_mask;
+      // haddr_t * 	addr;
+      // hsize_t * 	size;
+      // haddr_t   offset = H5Dget_offset(dset_id);
+      // H5Dget_chunk_info_by_coord(dset_id, &offset, filter_mask, addr,size);
+      // printf("H5Dget_chunk_info_by_coord : filter_mask=%ld addr=%zu size=%zu\n", 
+      //   filter_mask, addr, size);
+
+    }
+  }
+
+}
+
+/* candice added, for printout file info */
+void print_file_info(hid_t file_id){
+
+  // // H5F_OBJ_FILE
+  // H5Fget_name: only getting file name...
+  char name_buff[100];
+
+  if((H5Fget_name(file_id,name_buff, 100*sizeof(char))) < 0){
+    printf("Filename : Error\n");
+  } else {
+    printf("Filename : %s\n", name_buff); 
+  }
+
+  // H5Fget_filesize
+  // printf("- file_id : %zu\n", file_id);
+  hsize_t filesize;
+  if((H5Fget_filesize( file_id, &filesize)) < 0){
+    printf("Filesize : Error\n");
+  } else {
+    printf("Filesize : %zu\n", filesize);
+  }
+
+  // H5Dget_access_plist
+  // printf("H5Fget_access_plist : %zu\n", H5Fget_access_plist(file_id));
+
+  // printf("\n");
+}
+
+void record_all_file(File_access_t * access){
+
+  ssize_t file_count = H5Fget_obj_count(H5F_OBJ_ALL,H5F_OBJ_FILE);
+  hid_t file_id_list[file_count];
+  if((H5Fget_obj_ids(H5F_OBJ_ALL, H5F_OBJ_FILE, file_count, file_id_list)) < 0){
+    printf("- H5Fget_obj_ids : Error\n");
+  } else {
+    for (int i=0; i< file_count; i++){
+      //print_file_info(file_id_list[i]);
+
+      // H5Fget_name
+      H5Fget_name(file_id_list[i],access->filename, sizeof(access->filename));
+
+      // H5Fget_filesize
+      H5Fget_filesize(file_id_list[i], &(access->file_size));
+
+    }
+  }
+}
+
+void print_all_file(){
+  ssize_t file_count = H5Fget_obj_count(H5F_OBJ_ALL,H5F_OBJ_FILE);
+  hid_t file_id_list[file_count];
+  if((H5Fget_obj_ids(H5F_OBJ_ALL, H5F_OBJ_FILE, file_count, file_id_list)) < 0){
+    printf("- H5Fget_obj_ids : Error\n");
+  } else {
+    for (int i=0; i< file_count; i++){
+      print_file_info(file_id_list[i]);
+
+    }
+  }
+}
+
+
+/* candice added, print/record info H5FD__hermes_open from */
+void * print_read_write_info(H5FD_hermes_t *file, H5FD_mem_t H5_ATTR_UNUSED type,
+                                hid_t H5_ATTR_UNUSED dxpl_id, haddr_t addr,
+                                size_t size, char * t, struct timespec t_start, struct timespec t_end){
+  size_t         start_page_index; /* First page index of tranfer buffer */
+  size_t         end_page_index; /* End page index of tranfer buffer */
+  size_t         num_pages; /* Number of pages of transfer buffer */
+  size_t         blob_size = file->buf_size;
+  haddr_t        addr_end = addr+size-1;
+  File_access_t * access = malloc(sizeof(File_access_t));
+  
+  
+  start_page_index = addr/blob_size;
+  end_page_index = addr_end/blob_size;
+  num_pages = end_page_index - start_page_index + 1;
+
+  // printf("dxpl_id : %zu\n",dxpl_id); // \t%zu
+
+  // get file id and print info
+  // printf("Printing all current file info: ----------------------------- \n");
+  // printf("Access_Type : %s\n",t);
+  printf("Time_Start(ns) : %ld\n",(t_start.tv_sec * 1000000 + t_start.tv_nsec));
+  printf("Time_End(ns) : %ld\n",(t_end.tv_sec * 1000000 + t_end.tv_nsec));
+  printf("Time_Elapsed(ns) : %ld\n",((t_end.tv_sec - t_start.tv_sec) * 1000000 + t_end.tv_nsec - t_start.tv_nsec));
+  print_all_file();
+
+  // get dataset id and print info
+  // printf("Printing all current dataset info: ----------------------------- \n");
+  printf("- Access_Size : %ld\n", size);
+  print_mem_type(type);
+  // printf("- Access_Region_Mem_Type : %s\n", );
+  printf("- Start_Page : %ld\n", start_page_index);
+  printf("- End_Page : %ld\n", end_page_index);
+  printf("- Number_Pages : %ld\n", num_pages);
+  printf("- Start_Address : %ld\n", addr);
+  printf("- End_Address : %ld\n", addr_end);
+  print_all_dset();
+
+  // H5Dget_access_plist : only for create/open
+
+  /* record and print \access struct start */
+  // init_file_access_struct(access);
+
+  // strcpy(access->type,t);
+  // record_all_file(access);
+  // record_mem_type(type, access);
+  
+  // access->access_size = size;
+  // access->addr_start = addr;
+  // access->addr_end = addr_end;
+  // access->page_start = start_page_index;
+  // access->page_end = end_page_index;
+  // access->page_num = num_pages;
+  // record_all_dset(access);
+  // print_data_access_record(access);
+
+  free(access);
+  /* record and print \access struct end */
+  
 }
 
 /*-------------------------------------------------------------------------
@@ -396,6 +907,7 @@ done:
   H5FD_HERMES_FUNC_LEAVE_API;
 }  /* end H5Pset_fapl_hermes() */
 
+
 /*-------------------------------------------------------------------------
  * Function:    H5FD__hermes_fapl_free
  *
@@ -414,6 +926,7 @@ static herr_t H5FD__hermes_fapl_free(void *_fa) {
   H5FD_HERMES_FUNC_LEAVE;
 }
 
+
 /*-------------------------------------------------------------------------
  * Function:    H5FD__hermes_open
  *
@@ -427,6 +940,9 @@ static herr_t H5FD__hermes_fapl_free(void *_fa) {
 static H5FD_t *
 H5FD__hermes_open(const char *name, unsigned flags, hid_t fapl_id,
                   haddr_t maxaddr) {
+  struct timespec t_start, t_end; // candice added record time
+  clock_gettime(CLOCK_MONOTONIC, &t_start);; // start time of function 
+
   H5FD_hermes_t  *file = NULL; /* hermes VFD info          */
   int             fd   = -1;   /* File descriptor          */
   int             o_flags = 0;     /* Flags for open() call    */
@@ -435,6 +951,7 @@ H5FD__hermes_open(const char *name, unsigned flags, hid_t fapl_id,
   H5FD_hermes_fapl_t new_fa = {0};
   char           *hermes_config = NULL;
   H5FD_t         *ret_value = NULL; /* Return value */
+
 
   /* Sanity check on file offsets */
   assert(sizeof(off_t) >= sizeof(size_t));
@@ -522,6 +1039,9 @@ H5FD__hermes_open(const char *name, unsigned flags, hid_t fapl_id,
                            "unable to allocate file struct");
   }
 
+
+
+
   if (name && *name) {
     file->bktname = strdup(name);
   }
@@ -539,8 +1059,28 @@ H5FD__hermes_open(const char *name, unsigned flags, hid_t fapl_id,
   file->flags = flags;
   file->eof = (haddr_t)sb.st_size;
 
+
   /* Set return value */
   ret_value = (H5FD_t *)file;
+
+  /* candice added for more file properties section start */
+
+  // File_access_t * access = malloc(sizeof(File_access_t));
+  // strcpy(access->type,"OPEN");
+  // strcpy(access->filename,name);
+  // access->file_size = sb.st_size;
+  // init_file_access_struct(access);
+  // print_data_access_record(access);
+  // free(access);
+  clock_gettime(CLOCK_MONOTONIC, &t_end);;
+  printf("Access_Type : OPEN\n");
+  printf("Time_Start(ns) : %ld\n",(t_start.tv_sec * 1000000 + t_start.tv_nsec));
+  printf("Time_End(ns) : %ld\n",(t_end.tv_sec * 1000000 + t_end.tv_nsec));
+  printf("Time_Elapsed(ns) : %ld\n",((t_end.tv_sec - t_start.tv_sec) * 1000000 + t_end.tv_nsec - t_start.tv_nsec));
+  printf("Filename : %s\n\n",file->bktname);
+
+  /* candice added for more file properties section end */
+  
 
 done:
   if (NULL == ret_value) {
@@ -571,6 +1111,8 @@ done:
  *-------------------------------------------------------------------------
  */
 static herr_t H5FD__hermes_close(H5FD_t *_file) {
+  struct timespec t_start, t_end;
+  clock_gettime(CLOCK_MONOTONIC, &t_start);;
   H5FD_hermes_t *file = (H5FD_hermes_t *)_file;
   size_t blob_size = file->buf_size;
   size_t i;
@@ -578,6 +1120,8 @@ static herr_t H5FD__hermes_close(H5FD_t *_file) {
 
   /* Sanity check */
   assert(file);
+
+
 
   if (file->persistence) {
     if (file->op == OP_WRITE) {
@@ -590,7 +1134,7 @@ static herr_t H5FD__hermes_close(H5FD_t *_file) {
           continue;
 
         char i_blob[LEN_BLOB_NAME];
-        snprintf(i_blob, sizeof(i_blob), "%zu\n", i);
+        snprintf(i_blob, sizeof(i_blob), "%zu", i); // candice: removed newline "%zu\n"
         HermesBucketGet(file->bkt_handle, i_blob, blob_size, file->page_buf);
 
         bool is_last_page = H5FD__hermes_is_last_page(file, i);
@@ -610,6 +1154,23 @@ static herr_t H5FD__hermes_close(H5FD_t *_file) {
       H5FD_HERMES_SYS_GOTO_ERROR(H5E_IO, H5E_CANTCLOSEFILE, FAIL,
                                  "unable to close file");
   }
+
+  /* candice added prints H5FD__hermes_close start */
+  // File_access_t * access = malloc(sizeof(File_access_t));
+  // init_file_access_struct(access);
+  // strcpy(access->type,"CLOSE");
+  // record_all_file(access);
+  // print_data_access_record(access);
+  // free(access);
+  clock_gettime(CLOCK_MONOTONIC, &t_end);;
+  printf("Access_Type : CLOSE\n");
+  printf("Time_Start(ns) : %ld\n",(t_start.tv_sec * 1000000 + t_start.tv_nsec));
+  printf("Time_End(ns) : %ld\n",(t_end.tv_sec * 1000000 + t_end.tv_nsec));
+  printf("Time_Elapsed(ns) : %ld\n",((t_end.tv_sec - t_start.tv_sec) * 1000000 + t_end.tv_nsec - t_start.tv_nsec));
+  printf("Filename : %s\n\n", file->bktname);
+  // strcpy(access->filename, file->bktname);
+
+  /* candice added prints H5FD__hermes_close end */
 
   if (file->ref_count == 1) {
     HermesBucketDestroy(file->bkt_handle);
@@ -764,6 +1325,10 @@ static haddr_t H5FD__hermes_get_eof(const H5FD_t *_file,
 static herr_t H5FD__hermes_read(H5FD_t *_file, H5FD_mem_t H5_ATTR_UNUSED type,
                                 hid_t H5_ATTR_UNUSED dxpl_id, haddr_t addr,
                                 size_t size, void *buf /*out*/) {
+  struct timespec        t_start, t_end; // candice added record time
+  clock_gettime(CLOCK_MONOTONIC, &t_start);; // start time of function 
+  printf("Access_Type : READ\n"); // candice 
+
   H5FD_hermes_t *file      = (H5FD_hermes_t *)_file;
   size_t         num_pages; /* Number of pages of transfer buffer */
   size_t         start_page_index; /* First page index of tranfer buffer */
@@ -773,6 +1338,9 @@ static herr_t H5FD__hermes_read(H5FD_t *_file, H5FD_mem_t H5_ATTR_UNUSED type,
   size_t         k;
   haddr_t        addr_end = addr+size-1;
   herr_t         ret_value = SUCCEED; /* Return value */
+  
+
+  
 
   assert(file && file->pub.cls);
   assert(buf);
@@ -805,13 +1373,16 @@ static herr_t H5FD__hermes_read(H5FD_t *_file, H5FD_mem_t H5_ATTR_UNUSED type,
   end_page_index = addr_end/blob_size;
   num_pages = end_page_index - start_page_index + 1;
 
+  
+
   for (k = start_page_index; k <= end_page_index; ++k) {
     size_t bytes_in;
     char k_blob[LEN_BLOB_NAME];
-    snprintf(k_blob, sizeof(k_blob), "%zu\n", k);
+    snprintf(k_blob, sizeof(k_blob), "%zu", k); // candice: removed newline "%zu\n"
+    // printf("- Blob : %s\n", k_blob); // candice added print blob name
+
     /* Check if this blob exists */
     bool blob_exists = check_blob(&file->blob_in_bucket, k);
-
     /* Check if addr is in the range of (k*blob_size, (k+1)*blob_size) */
     /* NOTE: The range does NOT include the start address of page k,
        but includes the end address of page k */
@@ -847,6 +1418,7 @@ static herr_t H5FD__hermes_read(H5FD_t *_file, H5FD_mem_t H5_ATTR_UNUSED type,
         HermesBucketGet(file->bkt_handle, k_blob, blob_size, file->page_buf);
 
         memcpy(buf, file->page_buf+offset, bytes_in);
+        
       }
       transfer_size += bytes_in;
       /* Check if addr_end is in the range of [k*blob_size,
@@ -906,6 +1478,12 @@ static herr_t H5FD__hermes_read(H5FD_t *_file, H5FD_mem_t H5_ATTR_UNUSED type,
   file->pos = addr+size;
   file->op  = OP_READ;
 
+  /* candice added print section start */
+  // printf("\nH5FD__hermes_read: \n"); 
+  clock_gettime(CLOCK_MONOTONIC, &t_end);;
+  print_read_write_info(file, type, dxpl_id, addr, size, "READ", t_start, t_end);
+  /* candice added print section end */
+
 done:
   if (ret_value < 0) {
     /* Reset last file I/O information */
@@ -933,6 +1511,10 @@ done:
 static herr_t H5FD__hermes_write(H5FD_t *_file, H5FD_mem_t H5_ATTR_UNUSED type,
                                  hid_t H5_ATTR_UNUSED dxpl_id, haddr_t addr,
                                  size_t size, const void *buf) {
+  struct timespec        t_start, t_end; // candice added record time
+  clock_gettime(CLOCK_MONOTONIC, &t_start);; // candice start time of function 
+  printf("Access_Type : WRITE\n"); // candice 
+
   H5FD_hermes_t *file      = (H5FD_hermes_t *)_file;
   size_t         start_page_index; /* First page index of tranfer buffer */
   size_t         end_page_index; /* End page index of tranfer buffer */
@@ -965,7 +1547,9 @@ static herr_t H5FD__hermes_write(H5FD_t *_file, H5FD_mem_t H5_ATTR_UNUSED type,
 
   for (k = start_page_index; k <= end_page_index; ++k) {
     char k_blob[LEN_BLOB_NAME];
-    snprintf(k_blob, sizeof(k_blob), "%zu\n", k);
+    snprintf(k_blob, sizeof(k_blob), "%zu", k); // candice: removed newline "%zu\n"
+    // printf("- Blob : %s\n", k_blob);
+
     bool blob_exists = check_blob(&file->blob_in_bucket, k);
     size_t page_start = k * blob_size;
     size_t next_page_start = (k + 1) * blob_size;
@@ -1044,6 +1628,12 @@ static herr_t H5FD__hermes_write(H5FD_t *_file, H5FD_mem_t H5_ATTR_UNUSED type,
   file->op  = OP_WRITE;
   if (file->pos > file->eof)
     file->eof = file->pos;
+  
+  /* candice added print section start */
+  // printf("\nH5FD__hermes_write: \n"); 
+  clock_gettime(CLOCK_MONOTONIC, &t_end);;
+  print_read_write_info(file, type, dxpl_id, addr, size, "WRITE", t_start, t_end);
+  /* candice added print section end */
 
 done:
   if (ret_value < 0) {
