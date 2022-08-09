@@ -43,6 +43,10 @@ namespace hermes::adapter {
 const char* kPathExclusions[] = {"/bin/", "/boot/", "/dev/",  "/etc/",
                                  "/lib/", "/opt/",  "/proc/", "/sbin/",
                                  "/sys/", "/usr/",  "/var/",  "/run/",
+                                 "/tmp/",
+                                 "/qfs/people/tang584/.conda/envs/hermes_ddmd/lib/python3.7/",
+                                 "/qfs/people/tang584/.local/lib/python3.7/site-packages/",
+                                 "/files0/oddite/deepdrivemd/",
                                  "pipe", "socket:", "anon_inode:"};
 /**
  * Paths prefixed with the following directories are tracked by Hermes even if
