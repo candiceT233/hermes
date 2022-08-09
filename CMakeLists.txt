@@ -2,6 +2,7 @@
 # refer to the root source directory of the project as ${HERMES_SOURCE_DIR} and
 # to the root binary directory of the project as ${HERMES_BINARY_DIR}.
 cmake_minimum_required (VERSION 3.10)
+cmake_policy(SET CMP0074 NEW)
 
 if(CMAKE_SIZEOF_VOID_P LESS 8)
   message(FATAL_ERROR "Hermes currently requires a 64-bit processor")
