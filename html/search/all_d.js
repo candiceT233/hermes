@@ -1,17 +1,18 @@
 var searchData=
 [
-  ['offset_240',['offset',['../structhermes_1_1_shmem_string.html#a0196d57c69696a5a7d350a396b608363',1,'hermes::ShmemString']]],
-  ['onattachfn_241',['onAttachFn',['../structhermes_1_1api_1_1_trait.html#a6fa98dc6045501b210d1a57a4539115c',1,'hermes::api::Trait']]],
-  ['ondetachfn_242',['onDetachFn',['../structhermes_1_1api_1_1_trait.html#a4137bf5d6efdae82a894d020efda38c4',1,'hermes::api::Trait']]],
-  ['onexit_243',['OnExit',['../namespacehermes_1_1adapter.html#acaa61681257a2e3c8ba391240a1f98d2',1,'hermes::adapter']]],
-  ['onlinkfn_244',['onLinkFn',['../structhermes_1_1api_1_1_trait.html#ab69dab2f0fdb5fb19923146bd6227eeb',1,'hermes::api::Trait']]],
-  ['onunlinkfn_245',['onUnlinkFn',['../structhermes_1_1api_1_1_trait.html#a10aab21e381eefb44e9a7d4aaf0b0104',1,'hermes::api::Trait']]],
-  ['open_246',['Open',['../structhermes_1_1adapter_1_1vfd_1_1test_1_1_hdf5_api.html#aa3b9ff73d67676ea4c293b6f16ecb698',1,'hermes::adapter::vfd::test::Hdf5Api']]],
-  ['openposix_247',['OpenPosix',['../structhermes_1_1adapter_1_1vfd_1_1test_1_1_hdf5_api.html#aaec3ebe936c35ed93dfc2b47d9d3b530',1,'hermes::adapter::vfd::test::Hdf5Api']]],
-  ['operator_20arena_20_2a_248',['operator Arena *',['../structhermes_1_1_scoped_temporary_memory.html#a5270d2d43f96ee4917e08671c540dbbd',1,'hermes::ScopedTemporaryMemory']]],
-  ['operator_20t_249',['operator T',['../classhermes_1_1api_1_1_i_d.html#a4b73f813055613a3a9a88dabc99297b8',1,'hermes::api::ID']]],
-  ['operator_21_3d_250',['operator!=',['../classhermes_1_1api_1_1_i_d.html#a56c66335c2a7171a409f9e3736f38463',1,'hermes::api::ID']]],
-  ['operator_3d_251',['operator=',['../structhermes_1_1adapter_1_1mpiio_1_1_file_struct.html#a945372efa19b5fd412cba810c1dd378a',1,'hermes::adapter::mpiio::FileStruct::operator=()'],['../structhermes_1_1adapter_1_1mpiio_1_1_hermes_struct.html#af35a43c8b52128b91989ba4c67bd1378',1,'hermes::adapter::mpiio::HermesStruct::operator=()'],['../structhermes_1_1adapter_1_1posix_1_1_file_i_d.html#a2b3a437f126ac942a4e32e3bc5406b1a',1,'hermes::adapter::posix::FileID::operator=()'],['../structhermes_1_1adapter_1_1posix_1_1_file_struct.html#a1dd58a81a853fe5f597f1d5a2ae6b46a',1,'hermes::adapter::posix::FileStruct::operator=()'],['../structhermes_1_1adapter_1_1posix_1_1_hermes_struct.html#aff75ca5c906bba0d5207d956d039652a',1,'hermes::adapter::posix::HermesStruct::operator=()'],['../classhermes_1_1adapter_1_1_singleton.html#a427ca41d58d6941c1fd937d63364e31e',1,'hermes::adapter::Singleton::operator=()'],['../structhermes_1_1adapter_1_1stdio_1_1_file_i_d.html#a259c3a4faea3ae86ce30b8f01cb9e8dd',1,'hermes::adapter::stdio::FileID::operator=()'],['../structhermes_1_1adapter_1_1stdio_1_1_file_struct.html#af9d593b3bc3c7792e3b68da4bcc29932',1,'hermes::adapter::stdio::FileStruct::operator=()'],['../structhermes_1_1adapter_1_1stdio_1_1_hermes_struct.html#add492ae9b3d6d66d4f9d3e0af56c1fc3',1,'hermes::adapter::stdio::HermesStruct::operator=()'],['../classapi_1_1_status.html#aa07ab2da93eec3ff49e84775f413ba8b',1,'api::Status::operator=()']]],
-  ['operator_3d_3d_252',['operator==',['../classhermes_1_1api_1_1_i_d.html#aa38b1d02de85314286fcc96d7b9c6825',1,'hermes::api::ID::operator==()'],['../classapi_1_1_status.html#af5c3b33dedea2851917d928a08fc1f21',1,'api::Status::operator==()']]],
-  ['organizeblob_253',['OrganizeBlob',['../classhermes_1_1api_1_1_bucket.html#a127c5e15f3be21a9354a6bfade588f87',1,'hermes::api::Bucket']]]
+  ['persist_255',['Persist',['../classhermes_1_1api_1_1_bucket.html#a91e455b2345e69f376803728d9414a56',1,'hermes::api::Bucket']]],
+  ['persisttrait_256',['PersistTrait',['../structhermes_1_1api_1_1_persist_trait.html',1,'hermes::api']]],
+  ['placeblobs_257',['PlaceBlobs',['../classhermes_1_1api_1_1_bucket.html#a90ac5c8ab3fc47ccc51566e722d3ca66',1,'hermes::api::Bucket']]],
+  ['point_258',['Point',['../struct_point.html',1,'']]],
+  ['policy_259',['policy',['../structhermes_1_1api_1_1_context.html#a38439f5337dc4f0623d8f94e9aa33f03',1,'hermes::api::Context']]],
+  ['proc_5fkind_260',['proc_kind',['../structhermes_1_1_communication_context.html#a41de3edded73879fbf8a750761c9111c',1,'hermes::CommunicationContext']]],
+  ['publish_261',['publish',['../namespacehermes_1_1pubsub.html#a42527ee736b716c787a8d46879cbd960',1,'hermes::pubsub']]],
+  ['pusharray_262',['PushArray',['../memory__management_8h.html#a43ad59a28476e0276c14d97f3cca75a4',1,'hermes']]],
+  ['pushclearedarray_263',['PushClearedArray',['../memory__management_8h.html#af7df055d8c62e55527ac01e6c1e3d2e0',1,'hermes']]],
+  ['pushclearedstruct_264',['PushClearedStruct',['../memory__management_8h.html#a0b920cd44bd75f39129699a69ebcf15d',1,'hermes']]],
+  ['pushsize_265',['PushSize',['../memory__management_8cc.html#abc4a3f05d273d7eacbd2cd8e1ad5e9ce',1,'hermes']]],
+  ['pushsizeandclear_266',['PushSizeAndClear',['../memory__management_8cc.html#a3af04b76abe44434f1648c42fca15794',1,'hermes']]],
+  ['pushstruct_267',['PushStruct',['../memory__management_8h.html#ac37a162ed266d8f186e43f5d06b4f748',1,'hermes']]],
+  ['put_268',['Put',['../classhermes_1_1api_1_1_bucket.html#a3a8832c8ef3fcf54ab2662135051f270',1,'hermes::api::Bucket::Put(const std::string &amp;name, const std::vector&lt; T &gt; &amp;data, Context &amp;ctx)'],['../classhermes_1_1api_1_1_bucket.html#a025d344918acf90a60ba9efb978e6f6d',1,'hermes::api::Bucket::Put(const std::string &amp;name, const std::vector&lt; T &gt; &amp;data)'],['../classhermes_1_1api_1_1_bucket.html#a441867ba2ca8319268104316b46966d4',1,'hermes::api::Bucket::Put(const std::string &amp;name, const u8 *data, size_t size, const Context &amp;ctx)'],['../classhermes_1_1api_1_1_bucket.html#a4ed62830212955f77e4b5e31918c1648',1,'hermes::api::Bucket::Put(const std::string &amp;name, const u8 *data, size_t size)'],['../classhermes_1_1api_1_1_bucket.html#a18180399c351be737c889ccaee8ff04f',1,'hermes::api::Bucket::Put(const std::vector&lt; std::string &gt; &amp;names, const std::vector&lt; std::vector&lt; T &gt;&gt; &amp;blobs, const Context &amp;ctx)'],['../classhermes_1_1api_1_1_bucket.html#ae0d9fa3ea5186faa4b2f62a313346aae',1,'hermes::api::Bucket::Put(const std::vector&lt; std::string &gt; &amp;names, const std::vector&lt; std::vector&lt; T &gt;&gt; &amp;blobs)']]],
+  ['putinternal_269',['PutInternal',['../classhermes_1_1api_1_1_bucket.html#a409f78fc50a74d26d2623cde27a9a1ad',1,'hermes::api::Bucket']]]
 ];

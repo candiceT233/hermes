@@ -1,11 +1,12 @@
 var searchData=
 [
-  ['max_5fbuckets_5fper_5fnode_687',['max_buckets_per_node',['../structhermes_1_1_config.html#a195d48422fb135a5bd86dd9166d3ada8',1,'hermes::Config']]],
-  ['max_5fvbuckets_5fper_5fnode_688',['max_vbuckets_per_node',['../structhermes_1_1_config.html#ac90e86144b866097d6d02cd1ef4dff66',1,'hermes::Config']]],
-  ['metadata_689',['metadata',['../classhermes_1_1adapter_1_1mpiio_1_1_metadata_manager.html#ada1a097c6847c027ae857adfefa6f31e',1,'hermes::adapter::mpiio::MetadataManager::metadata()'],['../classhermes_1_1adapter_1_1posix_1_1_metadata_manager.html#ae6b110b499b8a667bcf637016ff971c8',1,'hermes::adapter::posix::MetadataManager::metadata()'],['../classhermes_1_1adapter_1_1pubsub_1_1_metadata_manager.html#aa24f2c8e7dd9d64efbdb55649a61de8d',1,'hermes::adapter::pubsub::MetadataManager::metadata()'],['../classhermes_1_1adapter_1_1stdio_1_1_metadata_manager.html#a9ba56246f210b4e00f41081a934da18e',1,'hermes::adapter::stdio::MetadataManager::metadata()']]],
-  ['metadata_5fmanager_5foffset_690',['metadata_manager_offset',['../structhermes_1_1_shared_memory_context.html#a78322dc2f38b1642d82235955ac25f5c',1,'hermes::SharedMemoryContext']]],
-  ['minimize_5fio_5ftime_5foptions_691',['minimize_io_time_options',['../structhermes_1_1api_1_1_context.html#addefab2a6b6c6b897617af229b3a20d2',1,'hermes::api::Context']]],
-  ['mount_5fpoint_692',['mount_point',['../structhermes_1_1_device.html#ad4a4fe8cad8bd303ce14d9a745bf0c43',1,'hermes::Device']]],
-  ['mount_5fpoints_693',['mount_points',['../structhermes_1_1_config.html#a9703f47309e0fcfe42a9f092a6b355ea',1,'hermes::Config']]],
-  ['mutex_694',['mutex',['../structhermes_1_1_heap.html#a84f50982a2fba97e0577f418261c3284',1,'hermes::Heap']]]
+  ['name_5f_697',['name_',['../classhermes_1_1api_1_1_v_bucket.html#a517416726168bfe3a38d9978c04daa27',1,'hermes::api::VBucket']]],
+  ['next_5ffree_698',['next_free',['../structhermes_1_1_buffer_header.html#af93940dc35543c572bcd8fe7f6dd99e7',1,'hermes::BufferHeader']]],
+  ['node_5fid_699',['node_id',['../unionhermes_1_1_buffer_i_d.html#acf2d545d2ec2905d0e61dec8887243fb',1,'hermes::BufferID::node_id()'],['../structhermes_1_1_communication_context.html#a6ee75c70b8c29ae4ac38ad80d111766b',1,'hermes::CommunicationContext::node_id()'],['../unionhermes_1_1_target_i_d.html#a6f7ee7f574deb8618f9a7d6225fd991c',1,'hermes::TargetID::node_id()'],['../unionhermes_1_1_bucket_i_d.html#a054b905c9f7465119ab367dd2ada3ccb',1,'hermes::BucketID::node_id()'],['../unionhermes_1_1_v_bucket_i_d.html#a69a44133585c0a5c953a0d5805a67986',1,'hermes::VBucketID::node_id()'],['../unionhermes_1_1_blob_i_d.html#a8e4b00341107c264ad55da116fa972a9',1,'hermes::BlobID::node_id()']]],
+  ['num_5fbuffer_5forganizer_5fretries_700',['num_buffer_organizer_retries',['../structhermes_1_1_config.html#a648d12da020c09a90466de49693bf1dc',1,'hermes::Config']]],
+  ['num_5fdevices_701',['num_devices',['../structhermes_1_1_buffer_pool.html#a3a8573cd2348aa2b39d4a678e22eca11',1,'hermes::BufferPool::num_devices()'],['../structhermes_1_1_config.html#a84f4ed233fb630c7e3fb844f5491d040',1,'hermes::Config::num_devices()']]],
+  ['num_5fheaders_702',['num_headers',['../structhermes_1_1_buffer_pool.html#aad9ef89dd11da05ed9c543898f8ee52e',1,'hermes::BufferPool']]],
+  ['num_5fnodes_703',['num_nodes',['../structhermes_1_1_communication_context.html#ae731641f4776f27ebf22bcfb6e812fa5',1,'hermes::CommunicationContext']]],
+  ['num_5fslabs_704',['num_slabs',['../structhermes_1_1_buffer_pool.html#aec7666673ec1ed1d556575a807a7ea35',1,'hermes::BufferPool::num_slabs()'],['../structhermes_1_1_config.html#a7be959755e4cad44534f957cdb40c158',1,'hermes::Config::num_slabs()']]],
+  ['num_5ftargets_705',['num_targets',['../structhermes_1_1_config.html#a512abea6d6878bf2335a0e07ac6b5bd7',1,'hermes::Config']]]
 ];

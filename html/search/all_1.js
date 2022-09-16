@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['balancedmapper_15',['BalancedMapper',['../classhermes_1_1adapter_1_1posix_1_1_balanced_mapper.html',1,'hermes::adapter::posix::BalancedMapper'],['../classhermes_1_1adapter_1_1stdio_1_1_balanced_mapper.html',1,'hermes::adapter::stdio::BalancedMapper'],['../classhermes_1_1adapter_1_1mpiio_1_1_balanced_mapper.html',1,'hermes::adapter::mpiio::BalancedMapper']]],
+  ['balancedmapper_15',['BalancedMapper',['../classhermes_1_1adapter_1_1mpiio_1_1_balanced_mapper.html',1,'hermes::adapter::mpiio::BalancedMapper'],['../classhermes_1_1adapter_1_1posix_1_1_balanced_mapper.html',1,'hermes::adapter::posix::BalancedMapper'],['../classhermes_1_1adapter_1_1stdio_1_1_balanced_mapper.html',1,'hermes::adapter::stdio::BalancedMapper']]],
   ['bandwidth_5fmbps_16',['bandwidth_mbps',['../structhermes_1_1_device.html#a7666ab1396f8727819da6862afb33622',1,'hermes::Device']]],
   ['bandwidths_17',['bandwidths',['../structhermes_1_1_config.html#afa952d94dcbfc37afb714e754585342f',1,'hermes::Config']]],
   ['base_18',['base',['../structhermes_1_1_arena.html#aba3fc1f263ab099439fabdca9c782204',1,'hermes::Arena']]],

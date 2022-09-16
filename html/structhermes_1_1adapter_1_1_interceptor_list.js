@@ -8,5 +8,6 @@ var structhermes_1_1adapter_1_1_interceptor_list =
     [ "adapter_mode", "structhermes_1_1adapter_1_1_interceptor_list.html#a9656e98214326b7a836643c49de70f6b", null ],
     [ "adapter_paths", "structhermes_1_1adapter_1_1_interceptor_list.html#abe24f9ff0790b4cc516e0b81f6ed2c5f", null ],
     [ "hermes_flush_exclusion", "structhermes_1_1adapter_1_1_interceptor_list.html#ad60fcf307ac5cf76669b54ee4d4d84e9", null ],
-    [ "hermes_paths_exclusion", "structhermes_1_1adapter_1_1_interceptor_list.html#ad6ba5d414bb024bde1236eb5beece646", null ]
+    [ "hermes_paths_exclusion", "structhermes_1_1adapter_1_1_interceptor_list.html#ad6ba5d414bb024bde1236eb5beece646", null ],
+    [ "hermes_paths_inclusion", "structhermes_1_1adapter_1_1_interceptor_list.html#a1753edc494048353b6f234b01f4e1a65", null ]
 ];

@@ -1,8 +1,10 @@
 var searchData=
 [
-  ['vbucket_355',['VBucket',['../classhermes_1_1api_1_1_v_bucket.html',1,'hermes::api']]],
-  ['vbucket_5fmap_5fmutex_356',['vbucket_map_mutex',['../structhermes_1_1_metadata_manager.html#ad1b87dc2dbacbbf77fbb1c91ab13a788',1,'hermes::MetadataManager']]],
-  ['vbucket_5fmutex_357',['vbucket_mutex',['../structhermes_1_1_metadata_manager.html#adf620aa8b1533f943a4fdfba19dab1b2',1,'hermes::MetadataManager']]],
-  ['vbucketid_358',['VBucketID',['../unionhermes_1_1_v_bucket_i_d.html',1,'hermes']]],
-  ['vbucketinfo_359',['VBucketInfo',['../structhermes_1_1_v_bucket_info.html',1,'hermes']]]
+  ['welcome_20to_20hermes_21_361',['Welcome to Hermes!',['../index.html',1,'']]],
+  ['waitforbackgroundflush_362',['WaitForBackgroundFlush',['../classhermes_1_1api_1_1_v_bucket.html#a11a7ff7793da6932ce67f035ad9e8a26',1,'hermes::api::VBucket']]],
+  ['windowdata_363',['WindowData',['../struct_window_data.html',1,'']]],
+  ['world_5fproc_5fid_364',['world_proc_id',['../structhermes_1_1_communication_context.html#a55f196e759240784800fcf9c3ef39395',1,'hermes::CommunicationContext']]],
+  ['world_5fsize_365',['world_size',['../structhermes_1_1_communication_context.html#a2bae5018f74b1ae650c901af166e7625',1,'hermes::CommunicationContext']]],
+  ['writeblobtobuffers_366',['WriteBlobToBuffers',['../buffer__pool_8cc.html#ad9163d10dd9f730c3bb00fb480138c6c',1,'hermes']]],
+  ['writepartial1d_367',['WritePartial1d',['../structhermes_1_1adapter_1_1vfd_1_1test_1_1_hdf5_api.html#adf0098b0cf034fbcda942a92e5992259',1,'hermes::adapter::vfd::test::Hdf5Api']]]
 ];

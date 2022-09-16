@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['unlink_351',['Unlink',['../classhermes_1_1api_1_1_v_bucket.html#af1ea7cd685b2264a405e1ced612088a9',1,'hermes::api::VBucket::Unlink(std::string blob_name, std::string bucket_name, Context &amp;ctx)'],['../classhermes_1_1api_1_1_v_bucket.html#a6329f7c88429dc6563eaee71318b3a1a',1,'hermes::api::VBucket::Unlink(std::string blob_name, std::string bucket_name)']]],
-  ['update_352',['Update',['../classhermes_1_1adapter_1_1mpiio_1_1_metadata_manager.html#a07c5c32652f400b68ce9481c26b4932e',1,'hermes::adapter::mpiio::MetadataManager::Update()'],['../classhermes_1_1adapter_1_1posix_1_1_metadata_manager.html#ad4cd83902a8b1d2288c03b6bd4e2cb29',1,'hermes::adapter::posix::MetadataManager::Update()'],['../classhermes_1_1adapter_1_1pubsub_1_1_metadata_manager.html#aaaa53e1509fdcc8eb9eac03f04855861',1,'hermes::adapter::pubsub::MetadataManager::Update()'],['../classhermes_1_1adapter_1_1stdio_1_1_metadata_manager.html#a003573d76b0f752b35ee1dada880afc3',1,'hermes::adapter::stdio::MetadataManager::Update()']]],
-  ['used_353',['used',['../structhermes_1_1_buffer_header.html#a9bc65551cd0187c86a4941c6d54768a5',1,'hermes::BufferHeader::used()'],['../structhermes_1_1_arena.html#ab2ba6b537c627c2d55a2d4203be55fe5',1,'hermes::Arena::used()'],['../structhermes_1_1_scoped_temporary_memory.html#a304b15921f746ae4bb7db06022e992ba',1,'hermes::ScopedTemporaryMemory::used()']]],
-  ['utils_2eh_354',['utils.h',['../utils_8h.html',1,'']]]
+  ['vbucket_356',['VBucket',['../classhermes_1_1api_1_1_v_bucket.html',1,'hermes::api']]],
+  ['vbucket_5fmap_5fmutex_357',['vbucket_map_mutex',['../structhermes_1_1_metadata_manager.html#ad1b87dc2dbacbbf77fbb1c91ab13a788',1,'hermes::MetadataManager']]],
+  ['vbucket_5fmutex_358',['vbucket_mutex',['../structhermes_1_1_metadata_manager.html#adf620aa8b1533f943a4fdfba19dab1b2',1,'hermes::MetadataManager']]],
+  ['vbucketid_359',['VBucketID',['../unionhermes_1_1_v_bucket_i_d.html',1,'hermes']]],
+  ['vbucketinfo_360',['VBucketInfo',['../structhermes_1_1_v_bucket_info.html',1,'hermes']]]
 ];

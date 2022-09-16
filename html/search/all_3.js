@@ -24,5 +24,6 @@ var searchData=
   ['disable_5fswap_101',['disable_swap',['../structhermes_1_1api_1_1_context.html#ab0ce61062b93b9d46b3ebd7296b03bcb',1,'hermes::api::Context']]],
   ['disconnect_102',['disconnect',['../namespacehermes_1_1pubsub.html#aa0c9138681d11c86b2786124cd133237',1,'hermes::pubsub']]],
   ['display_5fbucket_103',['Display_bucket',['../classhermes_1_1api_1_1_hermes.html#ac5e5c3d734635db08aae4bdf90d64075',1,'hermes::api::Hermes']]],
-  ['display_5fvbucket_104',['Display_vbucket',['../classhermes_1_1api_1_1_hermes.html#aeb3132dd2af5918c6fd117e91a766f88',1,'hermes::api::Hermes']]]
+  ['display_5fvbucket_104',['Display_vbucket',['../classhermes_1_1api_1_1_hermes.html#aeb3132dd2af5918c6fd117e91a766f88',1,'hermes::api::Hermes']]],
+  ['dset_5faccess_5ft_105',['Dset_access_t',['../struct_dset__access__t.html',1,'']]]
 ];

@@ -1,17 +1,17 @@
 var hierarchy =
 [
-    [ "hermes::adapter::mpiio::AbstractMapper", "classhermes_1_1adapter_1_1mpiio_1_1_abstract_mapper.html", [
-      [ "hermes::adapter::mpiio::BalancedMapper", "classhermes_1_1adapter_1_1mpiio_1_1_balanced_mapper.html", null ]
-    ] ],
     [ "hermes::adapter::posix::AbstractMapper", "classhermes_1_1adapter_1_1posix_1_1_abstract_mapper.html", [
       [ "hermes::adapter::posix::BalancedMapper", "classhermes_1_1adapter_1_1posix_1_1_balanced_mapper.html", null ]
+    ] ],
+    [ "hermes::adapter::mpiio::AbstractMapper", "classhermes_1_1adapter_1_1mpiio_1_1_abstract_mapper.html", [
+      [ "hermes::adapter::mpiio::BalancedMapper", "classhermes_1_1adapter_1_1mpiio_1_1_balanced_mapper.html", null ]
     ] ],
     [ "hermes::adapter::stdio::AbstractMapper", "classhermes_1_1adapter_1_1stdio_1_1_abstract_mapper.html", [
       [ "hermes::adapter::stdio::BalancedMapper", "classhermes_1_1adapter_1_1stdio_1_1_balanced_mapper.html", null ]
     ] ],
     [ "hermes::adapter::stdio::AdapterStat", "structhermes_1_1adapter_1_1stdio_1_1_adapter_stat.html", null ],
-    [ "hermes::adapter::posix::AdapterStat", "structhermes_1_1adapter_1_1posix_1_1_adapter_stat.html", null ],
     [ "hermes::adapter::mpiio::AdapterStat", "structhermes_1_1adapter_1_1mpiio_1_1_adapter_stat.html", null ],
+    [ "hermes::adapter::posix::AdapterStat", "structhermes_1_1adapter_1_1posix_1_1_adapter_stat.html", null ],
     [ "hermes::Arena", "structhermes_1_1_arena.html", null ],
     [ "hermes::ArenaInfo", "structhermes_1_1_arena_info.html", null ],
     [ "hermes::adapter::vfd::test::Arguments", "structhermes_1_1adapter_1_1vfd_1_1test_1_1_arguments.html", null ],
@@ -42,12 +42,14 @@ var hierarchy =
     [ "hermes::DebugHeapAllocation", "structhermes_1_1_debug_heap_allocation.html", null ],
     [ "hermes::DebugState", "structhermes_1_1_debug_state.html", null ],
     [ "hermes::Device", "structhermes_1_1_device.html", null ],
+    [ "Dset_access_t", "struct_dset__access__t.html", null ],
     [ "hermes::EntireFile", "structhermes_1_1_entire_file.html", null ],
+    [ "File_access_t", "struct_file__access__t.html", null ],
     [ "hermes::adapter::posix::FileID", "structhermes_1_1adapter_1_1posix_1_1_file_i_d.html", null ],
     [ "hermes::adapter::stdio::FileID", "structhermes_1_1adapter_1_1stdio_1_1_file_i_d.html", null ],
-    [ "hermes::adapter::posix::FileStruct", "structhermes_1_1adapter_1_1posix_1_1_file_struct.html", null ],
     [ "hermes::adapter::mpiio::FileStruct", "structhermes_1_1adapter_1_1mpiio_1_1_file_struct.html", null ],
     [ "hermes::adapter::stdio::FileStruct", "structhermes_1_1adapter_1_1stdio_1_1_file_struct.html", null ],
+    [ "hermes::adapter::posix::FileStruct", "structhermes_1_1adapter_1_1posix_1_1_file_struct.html", null ],
     [ "hermes::FreeBlock", "structhermes_1_1_free_block.html", null ],
     [ "hermes::FreeBlockHeader", "structhermes_1_1_free_block_header.html", null ],
     [ "std::hash< hermes::adapter::posix::FileID >", "structstd_1_1hash_3_01hermes_1_1adapter_1_1posix_1_1_file_i_d_01_4.html", null ],
@@ -58,15 +60,16 @@ var hierarchy =
     [ "hermes::api::Hermes", "classhermes_1_1api_1_1_hermes.html", null ],
     [ "hermes::adapter::mpiio::HermesRequest", "structhermes_1_1adapter_1_1mpiio_1_1_hermes_request.html", null ],
     [ "hermes::adapter::posix::HermesStruct", "structhermes_1_1adapter_1_1posix_1_1_hermes_struct.html", null ],
-    [ "hermes::adapter::stdio::HermesStruct", "structhermes_1_1adapter_1_1stdio_1_1_hermes_struct.html", null ],
     [ "hermes::adapter::mpiio::HermesStruct", "structhermes_1_1adapter_1_1mpiio_1_1_hermes_struct.html", null ],
+    [ "hermes::adapter::stdio::HermesStruct", "structhermes_1_1adapter_1_1stdio_1_1_hermes_struct.html", null ],
     [ "hermes::api::ID< Tag, T, default_value >", "classhermes_1_1api_1_1_i_d.html", null ],
     [ "hermes::IdList", "structhermes_1_1_id_list.html", null ],
     [ "hermes::IdMap", "structhermes_1_1_id_map.html", null ],
     [ "hermes::adapter::InterceptorList", "structhermes_1_1adapter_1_1_interceptor_list.html", null ],
-    [ "hermes::adapter::mpiio::MapperFactory", "classhermes_1_1adapter_1_1mpiio_1_1_mapper_factory.html", null ],
     [ "hermes::adapter::posix::MapperFactory", "classhermes_1_1adapter_1_1posix_1_1_mapper_factory.html", null ],
+    [ "hermes::adapter::mpiio::MapperFactory", "classhermes_1_1adapter_1_1mpiio_1_1_mapper_factory.html", null ],
     [ "hermes::adapter::stdio::MapperFactory", "classhermes_1_1adapter_1_1stdio_1_1_mapper_factory.html", null ],
+    [ "hermes::adapter::MetadataManager", "classhermes_1_1adapter_1_1_metadata_manager.html", null ],
     [ "hermes::adapter::posix::MetadataManager", "classhermes_1_1adapter_1_1posix_1_1_metadata_manager.html", null ],
     [ "hermes::adapter::mpiio::MetadataManager", "classhermes_1_1adapter_1_1mpiio_1_1_metadata_manager.html", null ],
     [ "hermes::adapter::pubsub::MetadataManager", "classhermes_1_1adapter_1_1pubsub_1_1_metadata_manager.html", null ],

@@ -76,6 +76,8 @@ var annotated_dup =
       [ "VBucketInfo", "structhermes_1_1_v_bucket_info.html", "structhermes_1_1_v_bucket_info" ]
     ] ],
     [ "std", "namespacestd.html", "namespacestd" ],
+    [ "Dset_access_t", "struct_dset__access__t.html", "struct_dset__access__t" ],
+    [ "File_access_t", "struct_file__access__t.html", "struct_file__access__t" ],
     [ "HeapMetadata", "struct_heap_metadata.html", "struct_heap_metadata" ],
     [ "Point", "struct_point.html", "struct_point" ],
     [ "Range", "struct_range.html", "struct_range" ],
