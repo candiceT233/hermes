@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"structhermes_1_1api_1_1_persist_trait.html#af50642a21d8ceaae98ad814a5d11d2a8":[3,0,1,1,6,4],
 "structhermes_1_1api_1_1_trait.html":[3,0,1,1,8],
 "structhermes_1_1api_1_1_trait.html#a10aab21e381eefb44e9a7d4aaf0b0104":[3,0,1,1,8,8],
 "structhermes_1_1api_1_1_trait.html#a4137bf5d6efdae82a894d020efda38c4":[3,0,1,1,8,5],

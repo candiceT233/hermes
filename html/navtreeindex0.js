@@ -10,6 +10,7 @@ var NAVTREEINDEX0 =
 "_h5_f_dhermes_8h_source.html":[4,0,0,5,0],
 "_h5_f_dhermes__err_8h_source.html":[4,0,0,5,1],
 "_h5_f_dhermes__log_8h_source.html":[4,0,0,5,2],
+"_h5_f_dhermes__log__bad_8h_source.html":[4,0,0,5,3],
 "adapter__test__utils_8h_source.html":[4,0,0,4,1],
 "adapter__utils_8h_source.html":[4,0,0,6],
 "annotated.html":[3,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "classhermes_1_1adapter_1_1_metadata_manager.html#acb7163b12dab22b7f4799d87e94545cf":[3,0,1,0,6,0],
 "classhermes_1_1adapter_1_1_singleton.html":[3,0,1,0,7],
 "classhermes_1_1adapter_1_1_singleton.html#a2a1286dbaa70d2090605827bab44cfe9":[3,0,1,0,7,4],
-"classhermes_1_1adapter_1_1_singleton.html#a427ca41d58d6941c1fd937d63364e31e":[3,0,1,0,7,3],
-"classhermes_1_1adapter_1_1_singleton.html#a7628ad540d84a0e62635e0e3f2f71ad6":[3,0,1,0,7,2]
+"classhermes_1_1adapter_1_1_singleton.html#a427ca41d58d6941c1fd937d63364e31e":[3,0,1,0,7,3]
 };

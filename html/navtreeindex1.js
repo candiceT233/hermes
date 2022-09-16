@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"classhermes_1_1adapter_1_1_singleton.html#a7628ad540d84a0e62635e0e3f2f71ad6":[3,0,1,0,7,2],
 "classhermes_1_1adapter_1_1_singleton.html#acb9aa864d45b7d030c98f7f4eae7a106":[3,0,1,0,7,0],
 "classhermes_1_1adapter_1_1_singleton.html#ae7d017b32bfd9f89279c66031318536b":[3,0,1,0,7,1],
 "classhermes_1_1adapter_1_1mpiio_1_1_abstract_mapper.html":[3,0,1,0,0,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "files.html":[4,0],
 "functions.html":[3,3,0],
 "functions.html":[3,3,0,0],
-"functions_b.html":[3,3,0,1],
-"functions_c.html":[3,3,0,2]
+"functions_b.html":[3,3,0,1]
 };

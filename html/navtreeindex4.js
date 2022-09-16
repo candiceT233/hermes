@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"structhermes_1_1_target.html#af1e48b4f47e40949aca84aac2296c3ba":[3,0,1,52,2],
 "structhermes_1_1_target_info.html":[3,0,1,54],
 "structhermes_1_1_target_info.html#a4b3726a884faf63c876e81b654789030":[3,0,1,54,0],
 "structhermes_1_1_target_info.html#a6320ab4e2c2ba3c0edce73e4542348f0":[3,0,1,54,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "structhermes_1_1api_1_1_persist_trait.html#a699a33bdb31cfc967f7df1fa0ab1c9c5":[3,0,1,1,6,0],
 "structhermes_1_1api_1_1_persist_trait.html#a6c43b56e6a5d2cad64a9e4d684d5d7dd":[3,0,1,1,6,2],
 "structhermes_1_1api_1_1_persist_trait.html#a940073a3dfc8fc6d0eda3f9f37b26ad1":[3,0,1,1,6,7],
-"structhermes_1_1api_1_1_persist_trait.html#ad60d96f48e6ecd4e0493b0b1f2886a12":[3,0,1,1,6,3],
-"structhermes_1_1api_1_1_persist_trait.html#af50642a21d8ceaae98ad814a5d11d2a8":[3,0,1,1,6,4]
+"structhermes_1_1api_1_1_persist_trait.html#ad60d96f48e6ecd4e0493b0b1f2886a12":[3,0,1,1,6,3]
 };
