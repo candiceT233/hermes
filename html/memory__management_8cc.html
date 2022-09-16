@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Hermes
-   &#160;<span id="projectnumber">0.7.0-beta</span>
+   &#160;<span id="projectnumber">0.8.0-beta</span>
    </div>
    <div id="projectbrief">I/O Buffering System</div>
   </td>
@@ -84,7 +84,8 @@ $(document).ready(function(){initNavTree('memory__management_8cc.html',''); init
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">memory_management.cc File Reference</div>  </div>
 </div><!--header-->
@@ -198,12 +199,33 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>hermes::CoalesceFreeB
 <tr class="memitem:a47b33a3c8b790c22e0b05cf2d78a064c"><td class="memItemLeft" align="right" valign="top"><a id="a47b33a3c8b790c22e0b05cf2d78a064c"></a>
 Ticket&#160;</td><td class="memItemRight" valign="bottom"><b>hermes::TryBeginTicketMutex</b> (TicketMutex *mutex, Ticket *existing_ticket)</td></tr>
 <tr class="separator:a47b33a3c8b790c22e0b05cf2d78a064c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0eb934a0429adfeac04160e6c8422b3"><td class="memItemLeft" align="right" valign="top"><a id="af0eb934a0429adfeac04160e6c8422b3"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hermes::BeginTicketMutexIfNoWait</b> (TicketMutex *mutex)</td></tr>
+<tr class="separator:af0eb934a0429adfeac04160e6c8422b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa154212f668ee2159c0b51ad134c7ffb"><td class="memItemLeft" align="right" valign="top"><a id="aa154212f668ee2159c0b51ad134c7ffb"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>hermes::BeginTicketMutex</b> (TicketMutex *mutex)</td></tr>
 <tr class="separator:aa154212f668ee2159c0b51ad134c7ffb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a908f5a281483a42a19d4587eebc4da"><td class="memItemLeft" align="right" valign="top"><a id="a5a908f5a281483a42a19d4587eebc4da"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>hermes::EndTicketMutex</b> (TicketMutex *mutex)</td></tr>
 <tr class="separator:a5a908f5a281483a42a19d4587eebc4da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2352149f1ac54de1b466fb13e679c162"><td class="memItemLeft" align="right" valign="top"><a id="a2352149f1ac54de1b466fb13e679c162"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hermes::BeginReaderLock</b> (RwLock *lock)</td></tr>
+<tr class="separator:a2352149f1ac54de1b466fb13e679c162"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4511450a0d58c689c6907407ab1c69c4"><td class="memItemLeft" align="right" valign="top"><a id="a4511450a0d58c689c6907407ab1c69c4"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>hermes::EndReaderLock</b> (RwLock *lock)</td></tr>
+<tr class="separator:a4511450a0d58c689c6907407ab1c69c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a310025cf1d6ee849b8ed1e67ce1009bb"><td class="memItemLeft" align="right" valign="top"><a id="a310025cf1d6ee849b8ed1e67ce1009bb"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>hermes::BeginWriterLock</b> (RwLock *lock)</td></tr>
+<tr class="separator:a310025cf1d6ee849b8ed1e67ce1009bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10258b4d035dea156e8d6eb733ea9f52"><td class="memItemLeft" align="right" valign="top"><a id="a10258b4d035dea156e8d6eb733ea9f52"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>hermes::EndWriterLock</b> (RwLock *lock)</td></tr>
+<tr class="separator:a10258b4d035dea156e8d6eb733ea9f52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a7f559ab10b6188ad77f37e4c89af62fc"><td class="memItemLeft" align="right" valign="top"><a id="a7f559ab10b6188ad77f37e4c89af62fc"></a>
+const int&#160;</td><td class="memItemRight" valign="bottom"><b>hermes::kAttemptsBeforeYield</b> = 100</td></tr>
+<tr class="separator:a7f559ab10b6188ad77f37e4c89af62fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Basic Arena implementation. </p>
