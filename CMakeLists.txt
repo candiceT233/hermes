@@ -2,7 +2,6 @@
 # refer to the root source directory of the project as ${HERMES_SOURCE_DIR} and
 # to the root binary directory of the project as ${HERMES_BINARY_DIR}.
 cmake_minimum_required (VERSION 3.10)
-cmake_policy(SET CMP0074 NEW)
 
 if(CMAKE_SIZEOF_VOID_P LESS 8)
   message(FATAL_ERROR "Hermes currently requires a 64-bit processor")
@@ -19,7 +18,7 @@ project(HERMES)
 # Version information
 #------------------------------------------------------------------------------
 set(HERMES_VERSION_MAJOR "0")
-set(HERMES_VERSION_MINOR "7")
+set(HERMES_VERSION_MINOR "8")
 set(HERMES_VERSION_PATCH "0")
 set(HERMES_PACKAGE "hermes")
 set(HERMES_PACKAGE_NAME "HERMES")
@@ -155,6 +154,7 @@ option(HERMES_ENABLE_VFD "Build the Hermes HDF5 Virtual File Driver" OFF)
 option(HERMES_ENABLE_WRAPPER "Enable hermes C API wrapper." ON)
 option(HERMES_ENABLE_GFLAGS "Enable GFLAGS support." ON)
 option(HERMES_INSTALL_TESTS "Enable installation of tests." OFF)
+
 # Calculate code coverage with debug mode
 if(HERMES_ENABLE_COVERAGE)
   if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -272,6 +272,12 @@ if(HERMES_RPC_THALLIUM)
   endif()
 endif()
 
+#YAML-CPP
+find_package(yaml-cpp REQUIRED)
+if(yaml-cpp_FOUND)
+  message(STATUS "found yaml-cpp at ${yaml-cpp_DIR}")
+endif()
+
 # GLOG
 find_package(glog REQUIRED)
 if(glog_FOUND)
@@ -331,6 +337,14 @@ endif()
 if(HERMES_ENABLE_VFD)
   set(HERMES_REQUIRED_HDF5_VERSION 1.13.0)
   set(HERMES_REQUIRED_HDF5_COMPONENTS C)
+
+  option(HERMES_VFD_IO_LOG "Enable VFD logging of dataset info." OFF) # candice added
+  # TODO(candice): add flag for VFD IO logging
+  if(HERMES_VFD_IO_LOG)
+      option(HERMES_ENABLE_VFD "Build the Hermes HDF5 Virtual File Driver" ON)
+      set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DENABLE_HDF5_IO_LOGGING")
+  endif()
+
   find_package(HDF5 ${HERMES_REQUIRED_HDF5_VERSION} CONFIG NAMES hdf5
     COMPONENTS ${HERMES_REQUIRED_HDF5_COMPONENTS} shared)
   if(HDF5_FOUND)
@@ -469,7 +483,7 @@ install(
 
 install(
   FILES
-    test/data/hermes.conf
+        test/data/hermes.yaml
   TYPE
     DATA
   RENAME
@@ -493,5 +507,5 @@ install(
 
 add_custom_target(lint
   COMMAND cpplint --recursive --exclude=${CMAKE_CURRENT_SOURCE_DIR}/src/stb_ds.h
-  --exclude=${CMAKE_CURRENT_SOURCE_DIR}/build ${CMAKE_CURRENT_SOURCE_DIR}
+  --exclude=${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}
 )
