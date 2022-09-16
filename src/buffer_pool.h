@@ -31,7 +31,7 @@
  *
  * The public structures and functions for interacting with the BufferPool as a
  * client. The interface includes hermes-specific application core
- * intialization, and the API through which the RoundRobinState and
+ * intialization, and the API through which the RoundRobin DPE and
  * BufferOrganizer interact with the BufferPool.
  */
 
@@ -75,6 +75,8 @@ struct Target {
   u64 capacity;
   std::atomic<u64> remaining_space;
   std::atomic<u64> speed;
+  ChunkedIdList effective_blobs;
+  TicketMutex effective_blobs_lock;
 };
 
 /**

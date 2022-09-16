@@ -24,9 +24,9 @@
 
 #include "hermes_version.h"
 
-#define KILOBYTES(n) ((n) * 1024)
-#define MEGABYTES(n) ((n) * 1024 * 1024)
-#define GIGABYTES(n) ((n) * 1024UL * 1024UL * 1024UL)
+#define KILOBYTES(n) (((size_t)n) * 1024)
+#define MEGABYTES(n) (((size_t)n) * 1024 * 1024)
+#define GIGABYTES(n) (((size_t)n) * 1024UL * 1024UL * 1024UL)
 
 namespace hermes {
 
@@ -43,6 +43,12 @@ typedef double f64;
 
 typedef u16 DeviceID;
 
+struct ChunkedIdList {
+  u32 head_offset;
+  u32 length;
+  u32 capacity;
+};
+
 namespace api {
 typedef std::vector<unsigned char> Blob;
 
@@ -53,14 +59,36 @@ enum class PlacementPolicy {
   kMinimizeIoTime,  /**< LP-based blob placement, minimize I/O time */
 };
 
+class PlacementPolicyConv {
+ public:
+  static std::string str(PlacementPolicy policy) {
+    switch (policy) {
+      case PlacementPolicy::kRandom: {
+        return "PlacementPolicy::kRandom";
+      }
+      case PlacementPolicy::kRoundRobin: {
+        return "PlacementPolicy::kRoundRobin";
+      }
+      case PlacementPolicy::kMinimizeIoTime: {
+        return "PlacementPolicy::kMinimizeIoTime";
+      }
+    }
+    return "PlacementPolicy::Invalid";
+  }
+};
+
+
 struct MinimizeIoTimeOptions {
   double minimum_remaining_capacity;
   double capacity_change_threshold;
+  bool use_placement_ratio;
 
-  MinimizeIoTimeOptions(double minimum_remaining_capacity = 0.1,
-                        double capacity_change_threshold = 0.2)
-      : minimum_remaining_capacity(minimum_remaining_capacity),
-        capacity_change_threshold(capacity_change_threshold) {
+  MinimizeIoTimeOptions(double minimum_remaining_capacity_ = 0.0,
+                        double capacity_change_threshold_ = 0.0,
+                        bool use_placement_ratio_ = false)
+      : minimum_remaining_capacity(minimum_remaining_capacity_),
+        capacity_change_threshold(capacity_change_threshold_),
+        use_placement_ratio(use_placement_ratio_) {
   }
 };
 
@@ -141,6 +169,8 @@ union TargetID {
   u64 as_int;
 };
 
+const TargetID kSwapTargetId = {{0, 0, 0}};
+
 /**
  * A PlacementSchema is a vector of (size, target) pairs where size is the
  * number of bytes to buffer and target is the TargetID where to buffer those
@@ -166,6 +196,11 @@ enum ArenaType {
   kArenaType_Transient,       /**< Scratch space                           */
 
   kArenaType_Count            /**< Sentinel value                          */
+};
+
+struct Thresholds {
+  float min;
+  float max;
 };
 
 /**
@@ -219,13 +254,17 @@ struct Config {
 
   /** The name of a file that contains host names, 1 per line */
   std::string rpc_server_host_file;
-
   /** The hostname of the RPC server, minus any numbers that Hermes may
    * auto-generate when the rpc_hostNumber_range is specified. */
   std::string rpc_server_base_name;
+  /** The list of numbers from all server names. E.g., '{1, 3}' if your servers
+   * are named ares-comp-1 and ares-comp-3 */
+  std::vector<std::string> host_numbers;
   /** The RPC server name suffix. This is appended to the base name plus host
       number. */
   std::string rpc_server_suffix;
+  /** The parsed hostnames from the hermes conf */
+  std::vector<std::string> host_names;
   /** The RPC protocol to be used. */
   std::string rpc_protocol;
   /** The RPC domain name for verbs transport. */
@@ -234,9 +273,6 @@ struct Config {
   int rpc_port;
   /** The RPC port number for the buffer organizer. */
   int buffer_organizer_port;
-  /** The list of numbers from all server names. E.g., '{1, 3}' if your servers
-   * are named ares-comp-1 and ares-comp-3 */
-  std::vector<int> host_numbers;
   /** The number of handler threads per RPC server. */
   int rpc_num_threads;
   /** The number of buffer organizer threads. */
@@ -245,11 +281,26 @@ struct Config {
   api::PlacementPolicy default_placement_policy;
   /** Whether blob splitting is enabled for Round-Robin blob placement. */
   bool default_rr_split;
-
+  /** The min and max capacity threshold in MiB for each device at which the
+   * BufferOrganizer will trigger. */
+  Thresholds bo_capacity_thresholds[kMaxDevices];
   /** A base name for the BufferPool shared memory segement. Hermes appends the
    * value of the USER environment variable to this string.
    */
   char buffer_pool_shmem_name[kMaxBufferPoolShmemNameLength];
+
+  /**
+   * Paths prefixed with the following directories are not tracked in Hermes
+   * Exclusion list used by darshan at
+   * darshan/darshan-runtime/lib/darshan-core.c
+   */
+  std::vector<std::string> path_exclusions;
+
+  /**
+   * Paths prefixed with the following directories are tracked by Hermes even if
+   * they share a root with a path listed in path_exclusions
+   */
+  std::vector<std::string> path_inclusions;
 };
 
 union BucketID {
@@ -297,7 +348,7 @@ union BlobID {
     i32 node_id;
   } bits;
 
-  /** The BlobID as a unsigned 64-bit integer */
+  /** The BlobID as an unsigned 64-bit integer */
   u64 as_int;
 };
 
@@ -310,15 +361,9 @@ namespace api {
 enum class TraitType : u8 {
   META = 0,
   DATA = 1,
-  FILE_MAPPING = 2,
-  PERSIST = 3,
+  PERSIST = 2,
 };
+
 }  // namespace api
-
-struct TraitIdArray {
-  TraitID *ids;
-  u32 length;
-};
-
 }  // namespace hermes
 #endif  // HERMES_TYPES_H_

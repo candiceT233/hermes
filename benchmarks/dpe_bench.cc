@@ -17,7 +17,8 @@
 
 #include "hermes.h"
 #include "utils.h"
-#include "data_placement_engine.h"
+#include "test_utils.h"
+#include "data_placement_engine_factory.h"
 
 /* example usage: ./bin/dpe_bench -m -s 4096 */
 
@@ -28,6 +29,7 @@ const auto now = std::chrono::high_resolution_clock::now;
 const u64 dpe_total_targets = 10;
 const size_t dpe_total_num_blobs = 10;
 const size_t dpe_total_blob_size = GIGABYTES(10);
+const size_t kDefaultBlobSize = KILOBYTES(4);
 
 void PrintUsage(char *program) {
   fprintf(stderr, "Usage %s [-r]\n", program);
@@ -54,7 +56,7 @@ int main(int argc, char **argv) {
   bool fixed_total_num_blobs {true}, fixed_total_blob_size {false};
   int option = -1;
   char *rvalue = NULL;
-  size_t each_blob_size;
+  size_t each_blob_size = kDefaultBlobSize;
   size_t total_placed_size;
   double dpe_seconds;
   api::Status result;
@@ -84,7 +86,7 @@ int main(int argc, char **argv) {
         PrintUsage(argv[0]);
         policy = api::PlacementPolicy::kRandom;
         fixed_total_blob_size = true;
-        each_blob_size = 4096;
+        each_blob_size = kDefaultBlobSize;
         std::cout << "Using Random policy for data placement engine.\n"
                   << "Using fixed number of blobs of size 4KB for test.\n\n";
     }
@@ -134,47 +136,23 @@ int main(int argc, char **argv) {
   std::vector<TargetID> targets =
                         testing::GetDefaultTargets(tgt_state.num_devices);
 
-  switch (policy) {
-    case api::PlacementPolicy::kRandom: {
-      std::multimap<u64, TargetID> ordered_cap;
-      for (auto i = 0; i < tgt_state.num_devices; ++i) {
-        ordered_cap.insert(std::pair<u64, TargetID>(
-                           tgt_state.bytes_available[i], targets[i]));
-      }
-
-      std::cout << "DPE benchmark uses Random placement.\n\n";
-      time_point start_tm = now();
-      result = RandomPlacement(blob_sizes, ordered_cap, output_tmp);
-      time_point end_tm = now();
-      dpe_seconds = std::chrono::duration<double>(end_tm - start_tm).count();
-      break;
-    }
-    case api::PlacementPolicy::kRoundRobin: {
-      time_point start_tm = now();
-      result = RoundRobinPlacement(blob_sizes, tgt_state.bytes_available,
-                                   output_tmp, targets, false);
-      std::cout << "DPE benchmark uses RoundRobin placement.\n\n";
-      time_point end_tm = now();
-      dpe_seconds = std::chrono::duration<double>(end_tm - start_tm).count();
-      break;
-    }
-    case api::PlacementPolicy::kMinimizeIoTime: {
-      std::cout << "DPE benchmark uses MinimizeIoTime placement.\n\n";
-      time_point start_tm = now();
-      result = MinimizeIoTimePlacement(blob_sizes, tgt_state.bytes_available,
-                                       tgt_state.bandwidth, targets,
-                                       output_tmp);
-      time_point end_tm = now();
-      dpe_seconds = std::chrono::duration<double>(end_tm - start_tm).count();
-      break;
-    }
-  }
+  api::Context ctx;
+  ctx.policy = policy;
+  std::cout << "DPE benchmark uses " <<
+      api::PlacementPolicyConv::str(policy) << " placement.\n\n";
+  time_point start_tm = now();
+  auto dpe = DPEFactory().Get(policy);
+  dpe->bandwidths = tgt_state.bandwidth;
+  result = dpe->Placement(blob_sizes, tgt_state.bytes_available,
+                          targets, ctx, output_tmp);
+  time_point end_tm = now();
+  dpe_seconds = std::chrono::duration<double>(end_tm - start_tm).count();
 
   u64 placed_size {0};
   for (auto schema : output_tmp) {
     placed_size += testing::UpdateDeviceState(schema, tgt_state);
   }
-  assert(placed_size == total_placed_size);
+  Assert(placed_size == total_placed_size);
 
   // Aggregate placement schemas from the same target
   if (result.Succeeded()) {
