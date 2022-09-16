@@ -56,6 +56,22 @@ typedef struct Dset_access_t {
   hsize_t   *dset_dim;
 } Dset_access_t;
 
+typedef struct File_access_t {
+  char      filename[H5L_MAX_LINK_NAME_LEN];
+  char      type[10]; /* open, read, write, close */
+  size_t    file_size;
+  size_t    access_size; /* data access size */
+  size_t    page_start;
+  size_t    page_end;
+  size_t    page_num;
+  haddr_t   addr_start;
+  haddr_t   addr_end;
+  char      *mem_type;
+  size_t    ndsets;
+  Dset_access_t * dsets;
+
+} File_access_t;
+
 /* candice added, print H5FD_mem_t H5FD_MEM_OHDR type more info */
 void print_ohdr_type(H5F_mem_t type){
 
@@ -116,6 +132,128 @@ void print_mem_type(H5F_mem_t type){
   } else {
     printf("- Access_Region_Mem_Type : NOT_VALID \n");
   }
+}
+
+/* candice added, print H5FD_mem_t H5FD_MEM_OHDR type more info */
+void record_ohdr_type(H5F_mem_t type, File_access_t * access){
+
+  if (type == H5FD_MEM_FHEAP_HDR){
+    strcpy(access->mem_type, "H5FD_MEM_FHEAP_HDR");
+
+  } else if( type == H5FD_MEM_FHEAP_IBLOCK ){
+    strcpy(access->mem_type, "H5FD_MEM_FHEAP_IBLOCK");
+
+  } else if( type == H5FD_MEM_FSPACE_HDR ){
+    strcpy(access->mem_type, "H5FD_MEM_FSPACE_HDR");
+
+  } else if( type == H5FD_MEM_SOHM_TABLE  ){
+    strcpy(access->mem_type, "H5FD_MEM_SOHM_TABLE");
+
+  } else if( type == H5FD_MEM_EARRAY_HDR ){
+    strcpy(access->mem_type, "H5FD_MEM_EARRAY_HDR");
+
+  } else if( type == H5FD_MEM_EARRAY_IBLOCK ){
+    strcpy(access->mem_type, "H5FD_MEM_EARRAY_IBLOCK");
+
+  } else if( type == H5FD_MEM_FARRAY_HDR  ){
+    strcpy(access->mem_type, "H5FD_MEM_FARRAY_HDR");
+
+  } else {
+    strcpy(access->mem_type, "H5FD_MEM_OHDR");
+  }
+}
+
+
+/* candice added, print H5FD_mem_t memory allocated type */
+void record_mem_type(H5F_mem_t type, File_access_t * access){
+  // https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html
+
+  access->mem_type = malloc(30*sizeof(char));
+
+  if (type == H5FD_MEM_DEFAULT){
+    strcpy(access->mem_type, "H5FD_MEM_SUPER");
+
+  } else if( type == H5FD_MEM_SUPER ){
+    strcpy(access->mem_type, "H5FD_MEM_SUPER");
+
+  } else if( type == H5FD_MEM_BTREE ){
+    strcpy(access->mem_type, "H5FD_MEM_BTREE");
+
+  } else if( type == H5FD_MEM_DRAW ){
+    strcpy(access->mem_type, "H5FD_MEM_DRAW");
+
+  } else if( type == H5FD_MEM_GHEAP ){
+    strcpy(access->mem_type, "H5FD_MEM_GHEAP");
+
+  } else if( type == H5FD_MEM_LHEAP ){
+    strcpy(access->mem_type, "H5FD_MEM_LHEAP");
+
+  } else if( type == H5FD_MEM_OHDR ){
+    record_ohdr_type(type, access);
+
+  } else if( type == H5FD_MEM_NTYPES ){
+    strcpy(access->mem_type, "H5FD_MEM_NTYPES");
+
+  } else if( type == H5FD_MEM_NOLIST ){
+    strcpy(access->mem_type, "H5FD_MEM_NOLIST");
+
+  } else {
+    strcpy(access->mem_type, "NOT_VALID");
+  }
+}
+
+
+void init_file_access_struct(File_access_t * acc){
+
+  acc->file_size = -1;
+  acc->access_size = -1;
+  acc->page_start = -1;
+  acc->page_end = -1;
+  acc->page_num = -1;
+  acc->addr_start = -1;
+  acc->addr_end = -1;
+  acc->ndsets = -1;
+
+}
+
+
+void * print_data_access_record(File_access_t * acc){
+
+  printf("Access_Type : %s\n", acc->type);
+  printf("Filename : %s\n", acc->filename);
+  printf("Filesize : %s\n", acc->file_size);
+  printf("- Access_Size : %ld\n", acc->access_size);
+  printf("- Access_Region_Mem_Type : %s\n", acc->mem_type);
+  printf("- Start_Page : %ld\n", acc->page_start);
+  printf("- End_Page : %ld\n", acc->page_end);
+  printf("- Number_Pages : %ld\n", acc->page_num);
+  printf("- Start_Address : %ld\n", acc->addr_start);
+  printf("- End_Address : %ld\n", acc->addr_end);
+  printf("- Num_Datasets : %ld\n", acc->ndsets);
+
+
+  if( acc->ndsets != -1 ){
+    
+
+    for(int i=0; i< acc->ndsets; i++){
+      printf("-- Dataset_Name : %s\n", acc->dsets[i].dset_name);
+      printf("-- Dataset_Offset : %ld\n", acc->dsets[i].dset_offset);
+      printf("-- Dataset_N_Points : %d\n", acc->dsets[i].dset_npoints);
+      printf("-- Dataset_N_Dimension : %d\n", acc->dsets[i].dset_ndim);
+      
+      hsize_t dset_ndim = acc->dsets[i].dset_ndim;
+
+      printf("-- Dataset_Dimension : {");
+      for (int j=0; j < dset_ndim; j++){
+        printf("%ld,", (int) acc->dsets[i].dset_dim[j]);
+      }
+      printf("}\n");
+    }
+
+  }
+
+  printf("\n");
+
 }
 
 /* candice added, for printout dataset dimension info */
@@ -212,6 +350,76 @@ void * print_all_dset(){
   printf("\n");
 }
 
+/* candice added, record dataset info */
+void record_all_dset(File_access_t * access){
+
+  // H5F_OBJ_ALL   
+  // (H5F_OBJ_FILE | H5F_OBJ_DATASET | H5F_OBJ_GROUP | H5F_OBJ_DATATYPE | H5F_OBJ_ATTR)
+
+  
+  size_t dset_count = H5Fget_obj_count(H5F_OBJ_ALL,H5F_OBJ_DATASET);
+  access->ndsets = dset_count;
+
+
+  hid_t dset_id_list[dset_count];
+  hid_t dset_id;
+
+  if((H5Fget_obj_ids(H5F_OBJ_ALL, H5F_OBJ_DATASET, dset_count, dset_id_list)) < 0){
+    printf("- H5Fget_obj_ids : Error\n");
+  } else {
+    for (int i=0; i< dset_count; i++){
+
+      if(i ==0){
+        access->dsets = malloc(sizeof(Dset_access_t ));
+      } else {
+        access->dsets = realloc(access->dsets, sizeof(Dset_access_t));
+      }
+      
+
+      dset_id = dset_id_list[i];
+      hid_t space_id = H5Dget_space(dset_id);
+
+      // get dataset name
+      H5Iget_name(dset_id,access->dsets[i].dset_name, sizeof(access->dsets[i].dset_name));
+
+      // get offset
+      access->dsets[i].dset_offset = H5Dget_offset(dset_id);
+
+      // get dimension
+      int d = H5Sget_simple_extent_ndims(space_id);
+
+      hsize_t 	dims[d];
+      hsize_t 	maxdims[d];
+      H5Sget_simple_extent_dims(space_id,dims,maxdims);
+
+      //  H5Sget_simple_extent_npoints
+      access->dsets[i].dset_npoints = H5Sget_simple_extent_npoints(space_id);
+      access->dsets[i].dset_ndim = d;
+      access->dsets[i].dset_dim = (hsize_t *) malloc( d * sizeof(dims));
+      access->dsets[i].dset_dim = dims;
+
+      //print_dset_info(dset_id_list[i]);
+
+      // // H5Dget_num_chunks : gives error, stack overflow
+      // hsize_t   nchunks;
+      // H5Dget_num_chunks(dset_id, H5S_ALL, &nchunks);
+      // printf("H5Dget_num_chunks : %zu\n", nchunks);
+
+
+      // // H5Dget_chunk_info_by_coord
+      // unsigned * 	filter_mask;
+      // haddr_t * 	addr;
+      // hsize_t * 	size;
+      // haddr_t   offset = H5Dget_offset(dset_id);
+      // H5Dget_chunk_info_by_coord(dset_id, &offset, filter_mask, addr,size);
+      // printf("H5Dget_chunk_info_by_coord : filter_mask=%ld addr=%zu size=%zu\n", 
+      //   filter_mask, addr, size);
+
+    }
+  }
+
+}
+
 /* candice added, for printout file info */
 void print_file_info(hid_t file_id){
 
@@ -240,6 +448,26 @@ void print_file_info(hid_t file_id){
   // printf("\n");
 }
 
+void record_all_file(File_access_t * access){
+
+  ssize_t file_count = H5Fget_obj_count(H5F_OBJ_ALL,H5F_OBJ_FILE);
+  hid_t file_id_list[file_count];
+  if((H5Fget_obj_ids(H5F_OBJ_ALL, H5F_OBJ_FILE, file_count, file_id_list)) < 0){
+    printf("- H5Fget_obj_ids : Error\n");
+  } else {
+    for (int i=0; i< file_count; i++){
+      //print_file_info(file_id_list[i]);
+
+      // H5Fget_name
+      H5Fget_name(file_id_list[i],access->filename, sizeof(access->filename));
+
+      // H5Fget_filesize
+      H5Fget_filesize(file_id_list[i], &(access->file_size));
+
+    }
+  }
+}
+
 void print_all_file(){
   ssize_t file_count = H5Fget_obj_count(H5F_OBJ_ALL,H5F_OBJ_FILE);
   hid_t file_id_list[file_count];
@@ -263,6 +491,7 @@ void * print_read_write_info(H5FD_mem_t H5_ATTR_UNUSED type,
   size_t         end_page_index; /* End page index of tranfer buffer */
   size_t         num_pages; /* Number of pages of transfer buffer */
   haddr_t        addr_end = addr+size-1;
+  File_access_t * access = malloc(sizeof(File_access_t));
   
   
   start_page_index = addr/blob_size;
@@ -291,6 +520,25 @@ void * print_read_write_info(H5FD_mem_t H5_ATTR_UNUSED type,
   printf("- End_Address : %ld\n", addr_end);
   print_all_dset();
 
-  /* record and print end */
+  // H5Dget_access_plist : only for create/open
+
+  /* record and print \access struct start */
+  // init_file_access_struct(access);
+
+  // strcpy(access->type,t);
+  // record_all_file(access);
+  // record_mem_type(type, access);
+  
+  // access->access_size = size;
+  // access->addr_start = addr;
+  // access->addr_end = addr_end;
+  // access->page_start = start_page_index;
+  // access->page_end = end_page_index;
+  // access->page_num = num_pages;
+  // record_all_dset(access);
+  // print_data_access_record(access);
+
+  free(access);
+  /* record and print \access struct end */
   
 }

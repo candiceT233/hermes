@@ -342,7 +342,8 @@ if(HERMES_ENABLE_VFD)
   # TODO(candice): add flag for VFD IO logging
   if(HERMES_VFD_IO_LOG)
       option(HERMES_ENABLE_VFD "Build the Hermes HDF5 Virtual File Driver" ON)
-      set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DENABLE_HDF5_IO_LOGGING")
+      #set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DENABLE_HDF5_IO_LOGGING -g -O0")
+      add_definitions("-DENABLE_HDF5_IO_LOGGING")
   endif()
 
   find_package(HDF5 ${HERMES_REQUIRED_HDF5_VERSION} CONFIG NAMES hdf5
