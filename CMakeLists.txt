@@ -154,7 +154,6 @@ option(HERMES_ENABLE_VFD "Build the Hermes HDF5 Virtual File Driver" OFF)
 option(HERMES_ENABLE_WRAPPER "Enable hermes C API wrapper." ON)
 option(HERMES_ENABLE_GFLAGS "Enable GFLAGS support." ON)
 option(HERMES_INSTALL_TESTS "Enable installation of tests." OFF)
-
 # Calculate code coverage with debug mode
 if(HERMES_ENABLE_COVERAGE)
   if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -338,8 +337,8 @@ if(HERMES_ENABLE_VFD)
   set(HERMES_REQUIRED_HDF5_VERSION 1.13.0)
   set(HERMES_REQUIRED_HDF5_COMPONENTS C)
 
-  option(HERMES_VFD_IO_LOG "Enable VFD logging of dataset info." OFF) # candice added
   # TODO(candice): add flag for VFD IO logging
+  option(HERMES_VFD_IO_LOG "Enable VFD logging of dataset info." OFF)
   if(HERMES_VFD_IO_LOG)
       option(HERMES_ENABLE_VFD "Build the Hermes HDF5 Virtual File Driver" ON)
       #set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DENABLE_HDF5_IO_LOGGING -g -O0")
@@ -408,6 +407,8 @@ endif()
 if(HERMES_BUILD_BUFFER_POOL_VISUALIZER AND SDL2_FOUND)
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/buffer_pool_visualizer)
 endif()
+
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/data_stager)
 
 #-----------------------------------------------------------------------------
 # Testing
