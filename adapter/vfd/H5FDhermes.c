@@ -987,7 +987,7 @@ static herr_t H5FD__hermes_read(H5FD_t *_file, H5FD_mem_t H5_ATTR_UNUSED type,
   /* candice added print section start */
   // printf("\nH5FD__hermes_read: \n"); 
   clock_gettime(CLOCK_MONOTONIC, &t_end);;
-  print_read_write_info(type, dxpl_id, addr, size, "READ", file->blob_size,t_start, t_end);
+  print_read_write_info(type, dxpl_id, addr, size, "READ", file->buf_size,t_start, t_end);
 
   /* candice added print section end */
 #endif
@@ -1143,7 +1143,7 @@ static herr_t H5FD__hermes_write(H5FD_t *_file, H5FD_mem_t H5_ATTR_UNUSED type,
   /* candice added print section start */
   // printf("\nH5FD__hermes_write: \n"); 
   clock_gettime(CLOCK_MONOTONIC, &t_end);;
-  print_read_write_info(type, dxpl_id, addr, size, "WRITE", file->blob_size,t_start, t_end);
+  print_read_write_info(type, dxpl_id, addr, size, "WRITE", file->buf_size,t_start, t_end);
   /* candice added print section end */
 #endif
 
