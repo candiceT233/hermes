@@ -20,8 +20,8 @@
 #include "adapter_utils.h"
 #include "config_parser.h"
 
-namespace fs = std::experimental::filesystem;
-const char* kPathExclusions[15] = {"/bin/", "/boot/", "/dev/",  "/etc/",
+namespace stdfs = std::experimental::filesystem;
+const char* kPathExclusions[] = {"/bin/", "/boot/", "/dev/",  "/etc/",
                                  "/lib/", "/opt/",  "/proc/", "/sbin/",
                                  "/sys/", "/usr/",  "/var/",  "/run/",
                                  "pipe", "socket:", "anon_inode:"};
@@ -32,14 +32,24 @@ namespace hermes::adapter {
  */
 bool exit = false;
 
+/**
+ * a flag for checking if buffering paths are populated or not
+ */
 bool populated = false;
 
+/**
+  populate buffering path
+*/
 void PopulateBufferingPath() {
   char* hermes_config = getenv(kHermesConf);
+  if (hermes_config == NULL) {
+    LOG(ERROR) << "HERMES_CONF is not set.";
+    return;
+  }
 
-  if (fs::exists(hermes_config)) {
+  if (stdfs::exists(hermes_config)) {
     std::string hermes_conf_abs_path =
-        WeaklyCanonical(fs::path(hermes_config)).string();
+        WeaklyCanonical(stdfs::path(hermes_config)).string();
     INTERCEPTOR_LIST->hermes_paths_exclusion.push_back(hermes_conf_abs_path);
   }
   hermes::Config config_stack = {};
@@ -73,6 +83,9 @@ void PopulateBufferingPath() {
   populated = true;
 }
 
+/**
+  check if \a path is being tracked
+*/
 bool IsTracked(const std::string& path) {
   if (hermes::adapter::exit) {
     return false;
@@ -97,8 +110,8 @@ bool IsTracked(const std::string& path) {
     }
   }
 
-  for (int i = 0; i < 15; ++i) {
-    if (abs_path.find(kPathExclusions[i]) == 0) {
+  for (auto &pth : kPathExclusions) {
+    if (abs_path.find(pth) != std::string::npos) {
       return false;
     }
   }
@@ -128,12 +141,18 @@ bool IsTracked(const std::string& path) {
   }
 }
 
+/**
+  check if \a fh file handler is being tracked
+*/
 bool IsTracked(FILE* fh) {
   if (hermes::adapter::exit) return false;
   atexit(OnExit);
   return IsTracked(GetFilenameFromFP(fh));
 }
 
+/**
+  check if \a fd file descriptor is being tracked
+*/  
 bool IsTracked(int fd) {
   if (hermes::adapter::exit) return false;
   atexit(OnExit);

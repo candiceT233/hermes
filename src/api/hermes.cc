@@ -64,6 +64,8 @@ Status TransferBlob(const Bucket &src_bkt,
   LOG(INFO) << "Transferring Blob from " << src_blob_name << " to "
             << dst_blob_name << '\n';
 
+  HERMES_NOT_IMPLEMENTED_YET;
+
   return ret;
 }
 
@@ -143,6 +145,7 @@ void Hermes::RunDaemon() {
 
 }  // namespace api
 
+/** get arena information from \a config configuration */
 ArenaInfo GetArenaInfo(Config *config) {
   size_t page_size = sysconf(_SC_PAGESIZE);
   // NOTE(chogan): Assumes first Device is RAM
@@ -176,6 +179,7 @@ ArenaInfo GetArenaInfo(Config *config) {
   return result;
 }
 
+/** get hosts from \a host_file file  */
 std::vector<std::string> GetHostsFromFile(const std::string &host_file) {
   std::vector<std::string> result;
   std::fstream file;
@@ -197,6 +201,7 @@ std::vector<std::string> GetHostsFromFile(const std::string &host_file) {
   return result;
 }
 
+/** push host names */
 void PushHostNames(Arena *arenas, RpcContext *rpc,
                    const std::vector<std::string> &host_names,
                    MetadataManager *mdm, u8 *shmem_base) {
@@ -210,6 +215,7 @@ void PushHostNames(Arena *arenas, RpcContext *rpc,
   mdm->host_names_offset = (u8 *)rpc->host_names - (u8 *)shmem_base;
 }
 
+/** initialize Hermes core  */
 SharedMemoryContext InitHermesCore(Config *config, CommunicationContext *comm,
                                    ArenaInfo *arena_info, Arena *arenas,
                                    RpcContext *rpc) {
@@ -262,6 +268,7 @@ SharedMemoryContext InitHermesCore(Config *config, CommunicationContext *comm,
   return context;
 }
 
+/** boostrap shared memory  */
 SharedMemoryContext
 BootstrapSharedMemory(Arena *arenas, Config *config, CommunicationContext *comm,
                       RpcContext *rpc, bool is_daemon, bool is_adapter) {

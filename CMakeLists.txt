@@ -336,15 +336,6 @@ endif()
 if(HERMES_ENABLE_VFD)
   set(HERMES_REQUIRED_HDF5_VERSION 1.13.0)
   set(HERMES_REQUIRED_HDF5_COMPONENTS C)
-
-  # TODO(candice): add flag for VFD IO logging
-  option(HERMES_VFD_IO_LOG "Enable VFD logging of dataset info." OFF)
-  if(HERMES_VFD_IO_LOG)
-      option(HERMES_ENABLE_VFD "Build the Hermes HDF5 Virtual File Driver" ON)
-      #set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DENABLE_HDF5_IO_LOGGING -g -O0")
-      add_definitions("-DENABLE_HDF5_IO_LOGGING")
-  endif()
-
   find_package(HDF5 ${HERMES_REQUIRED_HDF5_VERSION} CONFIG NAMES hdf5
     COMPONENTS ${HERMES_REQUIRED_HDF5_COMPONENTS} shared)
   if(HDF5_FOUND)
@@ -369,6 +360,13 @@ if(HERMES_ENABLE_VFD)
     else()
       message(FATAL_ERROR "Could not find HDF5, please set HDF5_DIR (1.13.0) or HDF5_ROOT (1.13.1).")
     endif()
+  endif()
+  # TODO(candice): add flag for VFD IO logging
+  option(HERMES_VFD_IO_LOG "Enable VFD logging of dataset info." OFF)
+  if(HERMES_VFD_IO_LOG)
+      option(HERMES_ENABLE_VFD "Build the Hermes HDF5 Virtual File Driver" ON)
+      #set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DENABLE_HDF5_IO_LOGGING -g -O0")
+      add_definitions("-DENABLE_HDF5_IO_LOGGING")
   endif()
 endif()
 
@@ -508,6 +506,5 @@ install(
 )
 
 add_custom_target(lint
-  COMMAND cpplint --recursive --exclude=${CMAKE_CURRENT_SOURCE_DIR}/src/stb_ds.h
-  --exclude=${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}
+  COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/ci/lint.sh ${CMAKE_CURRENT_SOURCE_DIR}
 )
