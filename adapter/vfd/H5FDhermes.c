@@ -44,6 +44,11 @@
 /* Necessary hermes headers */
 #include "hermes_wrapper.h"
 
+/* candice added functions for I/O traces start */
+#include <time.h>       // for struct timespec, clock_gettime(CLOCK_MONOTONIC, &end);
+#include "H5FDhermes_log.h"
+/* candice added functions for I/O traces end */
+
 #define H5FD_HERMES (H5FD_hermes_init())
 
 /* HDF5 doesn't currently have a driver init callback. Use
@@ -158,6 +163,10 @@ static herr_t  H5FD__hermes_read(H5FD_t *_file, H5FD_mem_t type, hid_t fapl_id,
 static herr_t  H5FD__hermes_write(H5FD_t *_file, H5FD_mem_t type, hid_t fapl_id,
                                   haddr_t addr, size_t size, const void *buf);
 
+/* candice added prototypes start */
+
+/* candice added prototypes end */
+
 static const H5FD_class_t H5FD_hermes_g = {
   H5FD_HERMES_VALUE,         /* value                */
   H5FD_HERMES_NAME,          /* name                 */
@@ -168,7 +177,7 @@ static const H5FD_class_t H5FD_hermes_g = {
   NULL,                      /* sb_encode            */
   NULL,                      /* sb_decode            */
   sizeof(H5FD_hermes_fapl_t),/* fapl_size            */
-  NULL,                      /* fapl_get             */
+  NULL,     /* fapl_get             */
   NULL,                      /* fapl_copy            */
   H5FD__hermes_fapl_free,    /* fapl_free            */
   0,                         /* dxpl_size            */
@@ -184,7 +193,7 @@ static const H5FD_class_t H5FD_hermes_g = {
   H5FD__hermes_get_eoa,      /* get_eoa              */
   H5FD__hermes_set_eoa,      /* set_eoa              */
   H5FD__hermes_get_eof,      /* get_eof              */
-  NULL,                      /* get_handle           */
+  NULL,   /* get_handle           */
   H5FD__hermes_read,         /* read                 */
   H5FD__hermes_write,        /* write                */
   NULL,                      /* flush                */
@@ -396,6 +405,7 @@ done:
   H5FD_HERMES_FUNC_LEAVE_API;
 }  /* end H5Pset_fapl_hermes() */
 
+
 /*-------------------------------------------------------------------------
  * Function:    H5FD__hermes_fapl_free
  *
@@ -414,6 +424,7 @@ static herr_t H5FD__hermes_fapl_free(void *_fa) {
   H5FD_HERMES_FUNC_LEAVE;
 }
 
+
 /*-------------------------------------------------------------------------
  * Function:    H5FD__hermes_open
  *
@@ -427,6 +438,12 @@ static herr_t H5FD__hermes_fapl_free(void *_fa) {
 static H5FD_t *
 H5FD__hermes_open(const char *name, unsigned flags, hid_t fapl_id,
                   haddr_t maxaddr) {
+                  
+#ifdef ENABLE_HDF5_IO_LOGGING
+  unsigned long        t_start; // candice added record time
+  t_start = get_time_usec();
+#endif
+
   H5FD_hermes_t  *file = NULL; /* hermes VFD info          */
   int             fd   = -1;   /* File descriptor          */
   int             o_flags = 0;     /* Flags for open() call    */
@@ -435,6 +452,7 @@ H5FD__hermes_open(const char *name, unsigned flags, hid_t fapl_id,
   H5FD_hermes_fapl_t new_fa = {0};
   char           *hermes_config = NULL;
   H5FD_t         *ret_value = NULL; /* Return value */
+
 
   /* Sanity check on file offsets */
   assert(sizeof(off_t) >= sizeof(size_t));
@@ -522,6 +540,7 @@ H5FD__hermes_open(const char *name, unsigned flags, hid_t fapl_id,
                            "unable to allocate file struct");
   }
 
+
   if (name && *name) {
     file->bktname = strdup(name);
   }
@@ -538,10 +557,15 @@ H5FD__hermes_open(const char *name, unsigned flags, hid_t fapl_id,
   file->blob_in_bucket.end_pos = 0;
   file->flags = flags;
   file->eof = (haddr_t)sb.st_size;
-
+  
   /* Set return value */
   ret_value = (H5FD_t *)file;
 
+#ifdef ENABLE_HDF5_IO_LOGGING
+  // file->bktname
+  print_open_close_info("H5FD__hermes_open", file, name, t_start, get_time_usec());
+#endif
+  
 done:
   if (NULL == ret_value) {
     if (fd >= 0)
@@ -571,6 +595,11 @@ done:
  *-------------------------------------------------------------------------
  */
 static herr_t H5FD__hermes_close(H5FD_t *_file) {
+  
+#ifdef ENABLE_HDF5_IO_LOGGING
+  unsigned long        t_start; // candice added record time
+  t_start = get_time_usec();
+#endif
   H5FD_hermes_t *file = (H5FD_hermes_t *)_file;
   size_t blob_size = file->buf_size;
   size_t i;
@@ -578,6 +607,8 @@ static herr_t H5FD__hermes_close(H5FD_t *_file) {
 
   /* Sanity check */
   assert(file);
+
+
 
   if (file->persistence) {
     if (file->op == OP_WRITE) {
@@ -590,7 +621,8 @@ static herr_t H5FD__hermes_close(H5FD_t *_file) {
           continue;
 
         char i_blob[LEN_BLOB_NAME];
-        snprintf(i_blob, sizeof(i_blob), "%zu\n", i);
+        snprintf(i_blob, sizeof(i_blob), "%zu", i); // candice: removed newline "%zu\n"
+        
         HermesBucketGet(file->bkt_handle, i_blob, blob_size, file->page_buf);
 
         bool is_last_page = H5FD__hermes_is_last_page(file, i);
@@ -610,6 +642,12 @@ static herr_t H5FD__hermes_close(H5FD_t *_file) {
       H5FD_HERMES_SYS_GOTO_ERROR(H5E_IO, H5E_CANTCLOSEFILE, FAIL,
                                  "unable to close file");
   }
+
+#ifdef ENABLE_HDF5_IO_LOGGING
+  /* candice added prints H5FD__hermes_close start */
+  print_open_close_info("H5FD__hermes_close", file, file->bktname, t_start, get_time_usec());
+  /* candice added prints H5FD__hermes_close end */
+#endif
 
   if (file->ref_count == 1) {
     HermesBucketDestroy(file->bkt_handle);
@@ -764,6 +802,11 @@ static haddr_t H5FD__hermes_get_eof(const H5FD_t *_file,
 static herr_t H5FD__hermes_read(H5FD_t *_file, H5FD_mem_t H5_ATTR_UNUSED type,
                                 hid_t H5_ATTR_UNUSED dxpl_id, haddr_t addr,
                                 size_t size, void *buf /*out*/) {
+#ifdef ENABLE_HDF5_IO_LOGGING
+  unsigned long        t_start, t_end; // candice added record time
+  t_start = get_time_usec();
+#endif
+
   H5FD_hermes_t *file      = (H5FD_hermes_t *)_file;
   size_t         num_pages; /* Number of pages of transfer buffer */
   size_t         start_page_index; /* First page index of tranfer buffer */
@@ -773,6 +816,9 @@ static herr_t H5FD__hermes_read(H5FD_t *_file, H5FD_mem_t H5_ATTR_UNUSED type,
   size_t         k;
   haddr_t        addr_end = addr+size-1;
   herr_t         ret_value = SUCCEED; /* Return value */
+  
+
+  
 
   assert(file && file->pub.cls);
   assert(buf);
@@ -805,13 +851,15 @@ static herr_t H5FD__hermes_read(H5FD_t *_file, H5FD_mem_t H5_ATTR_UNUSED type,
   end_page_index = addr_end/blob_size;
   num_pages = end_page_index - start_page_index + 1;
 
+  
+
   for (k = start_page_index; k <= end_page_index; ++k) {
     size_t bytes_in;
     char k_blob[LEN_BLOB_NAME];
-    snprintf(k_blob, sizeof(k_blob), "%zu\n", k);
+    snprintf(k_blob, sizeof(k_blob), "%zu", k); // candice: removed newline "%zu\n"
+
     /* Check if this blob exists */
     bool blob_exists = check_blob(&file->blob_in_bucket, k);
-
     /* Check if addr is in the range of (k*blob_size, (k+1)*blob_size) */
     /* NOTE: The range does NOT include the start address of page k,
        but includes the end address of page k */
@@ -847,6 +895,7 @@ static herr_t H5FD__hermes_read(H5FD_t *_file, H5FD_mem_t H5_ATTR_UNUSED type,
         HermesBucketGet(file->bkt_handle, k_blob, blob_size, file->page_buf);
 
         memcpy(buf, file->page_buf+offset, bytes_in);
+        
       }
       transfer_size += bytes_in;
       /* Check if addr_end is in the range of [k*blob_size,
@@ -905,6 +954,15 @@ static herr_t H5FD__hermes_read(H5FD_t *_file, H5FD_mem_t H5_ATTR_UNUSED type,
   /* Update current position */
   file->pos = addr+size;
   file->op  = OP_READ;
+#ifdef ENABLE_HDF5_IO_LOGGING
+  /* candice added print section start */
+  // printf("\nH5FD__hermes_read: \n"); 
+  t_end = get_time_usec();
+  print_read_write_info("H5FD__hermes_read", _file, file->bktname, 
+    type, dxpl_id, addr, size, file->buf_size, t_start, t_end, buf);
+
+  /* candice added print section end */
+#endif
 
 done:
   if (ret_value < 0) {
@@ -933,6 +991,11 @@ done:
 static herr_t H5FD__hermes_write(H5FD_t *_file, H5FD_mem_t H5_ATTR_UNUSED type,
                                  hid_t H5_ATTR_UNUSED dxpl_id, haddr_t addr,
                                  size_t size, const void *buf) {
+#ifdef ENABLE_HDF5_IO_LOGGING
+  unsigned long        t_start, t_end; // candice added record time
+  t_start = get_time_usec();
+#endif
+
   H5FD_hermes_t *file      = (H5FD_hermes_t *)_file;
   size_t         start_page_index; /* First page index of tranfer buffer */
   size_t         end_page_index; /* End page index of tranfer buffer */
@@ -965,7 +1028,8 @@ static herr_t H5FD__hermes_write(H5FD_t *_file, H5FD_mem_t H5_ATTR_UNUSED type,
 
   for (k = start_page_index; k <= end_page_index; ++k) {
     char k_blob[LEN_BLOB_NAME];
-    snprintf(k_blob, sizeof(k_blob), "%zu\n", k);
+    snprintf(k_blob, sizeof(k_blob), "%zu", k); // candice: removed newline "%zu\n"
+
     bool blob_exists = check_blob(&file->blob_in_bucket, k);
     size_t page_start = k * blob_size;
     size_t next_page_start = (k + 1) * blob_size;
@@ -1044,6 +1108,16 @@ static herr_t H5FD__hermes_write(H5FD_t *_file, H5FD_mem_t H5_ATTR_UNUSED type,
   file->op  = OP_WRITE;
   if (file->pos > file->eof)
     file->eof = file->pos;
+
+#ifdef ENABLE_HDF5_IO_LOGGING
+  /* candice added print section start */
+  // printf("\nH5FD__hermes_write: \n");
+  t_end = get_time_usec();
+  print_read_write_info("H5FD__hermes_write", _file, file->bktname, 
+    type, dxpl_id, addr, size, file->buf_size, t_start, t_end, buf);
+
+  /* candice added print section end */
+#endif
 
 done:
   if (ret_value < 0) {
